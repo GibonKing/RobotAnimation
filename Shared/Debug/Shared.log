@@ -1,0 +1,9 @@
+﻿  App.cpp
+  CommonApp.cpp
+  CommonFont.cpp
+f:\thirdyear\rt3d\rt3dassignment\assignment\hierarchicalanimation\shared\commonfont.cpp(108): warning C4456: declaration of 'ch' hides previous local declaration
+  f:\thirdyear\rt3d\rt3dassignment\assignment\hierarchicalanimation\shared\commonfont.cpp(99): note: see declaration of 'ch'
+  CommonMesh.cpp
+  D3DHelpers.cpp
+  Generating Code...
+  Shared.vcxproj -> F:\ThirdYear\RT3D\RT3DAssignment\Assignment\HierarchicalAnimation\Debug\Shared.lib
