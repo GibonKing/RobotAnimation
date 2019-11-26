@@ -3,7 +3,7 @@
 Animation::Animation(float fX, float fY, float fZ, float fRotY) {
 	SetRotation(fRotY);
 	SetupModel();
-	SetupAnimations();
+	SetupAnimations({ "Resources/Model/RobotIdleAnim.dae" });
 	SetWorldPosition(fX, fY, fZ);
 }
 
@@ -64,9 +64,15 @@ void Animation::SetupModel() {
 	}
 }
 
-void Animation::SetupAnimations() {
-	std::ifstream idleAnim("Resources/Model/RobotIdleAnimDAE.txt");
-	std::string line, temp1, part, prevPart, type, value, values, text;
+void Animation::SetupAnimations(std::vector<std::string> filePaths) {
+	for each(std::string filePath in filePaths) {
+		SetupAnimation(filePath);
+	}
+}
+
+void Animation::SetupAnimation(std::string filePath) {
+	std::ifstream idleAnim(filePath);
+	std::string line, temp1, part, prevPart, type;
 	int pos, pos2, modelPartsIterator = -1, modelAnimationsIterator = 0;
 	bool input;
 	std::vector<float> rotX, rotY, rotZ;
@@ -77,11 +83,9 @@ void Animation::SetupAnimations() {
 			pos = line.find("animation id");
 			if (pos != -1) {
 				temp1 = line.substr(pos);
-
 				pos = temp1.find('"');
 				if (pos != -1) {
 					temp1 = temp1.substr(pos);
-
 					pos = temp1.find(".");
 					if (pos != -1) {
 
@@ -92,9 +96,6 @@ void Animation::SetupAnimations() {
 								for (int valueCount(0); valueCount < rotX.size(); valueCount++) {
 									animRotations.push_back(XMFLOAT3(rotX[valueCount], rotY[valueCount], rotZ[valueCount]));
 								}
-								rotX.clear();
-								rotY.clear();
-								rotZ.clear();
 							}
 							for (int models(0); models < ModelParts.size(); models++) {
 								if (part == ModelParts[models].name) {
@@ -109,13 +110,11 @@ void Animation::SetupAnimations() {
 								}
 							}
 							prevPart = part;
-							text += prevPart + "\n";
 						}
 
 						//Get Type
 						pos2 = temp1.find('>');
 						type = temp1.substr(pos + 1, (pos2 - 1) - (pos + 1));
-						text += "\t" + type + "\n";
 					}
 				}
 			}
@@ -132,59 +131,65 @@ void Animation::SetupAnimations() {
 						temp1 = temp1.substr(0, pos2);
 
 						if (type == "translate") {
-							XMFLOAT3 vectorValue;
-							int count(0);
-							std::istringstream ss(temp1);
-							do {
-								ss >> value;
-
-								switch (count) {
-									case 0:
-										vectorValue.x = std::stof(value);
-										break;
-									case 1:
-										vectorValue.y = std::stof(value);
-										break;
-									case 2:
-										vectorValue.z = std::stof(value);
-										animTranslations.push_back(vectorValue);
-										count = -1;
-										break;
-								}
-								count++;
-							} while (ss);
+							animTranslations = GetTranslationValues(temp1);
 						}
 						else if (type == "rotateX") {
-							std::istringstream ss(temp1);
-							do {
-								ss >> value;
-								rotX.push_back(std::stof(value));
-							} while (ss);
-							rotX.pop_back();
+							rotX = GetRotationValues(temp1);
 						}
 						else if (type == "rotateY") {
-							std::istringstream ss(temp1);
-							do {
-								ss >> value;
-								rotY.push_back(std::stof(value));
-							} while (ss);
-							rotY.pop_back();
+							rotY = GetRotationValues(temp1);
 						}
 						else if (type == "rotateZ") {
-							std::istringstream ss(temp1);
-							do {
-								ss >> value;
-								rotZ.push_back(std::stof(value));
-							} while (ss);
-							rotZ.pop_back();
+							rotZ = GetRotationValues(temp1);
 						}
-
-						text += "\t\t" + temp1 + "\n";
 					}
 				}
 			}
 		//Find Values End
 	}
+}
+
+std::vector<float> Animation::GetRotationValues(std::string temp1) {
+	std::string value;
+	std::istringstream ss(temp1);
+	std::vector<float> values;
+
+	do {
+		ss >> value;
+		values.push_back(std::stof(value));
+	} while (ss);
+	values.pop_back();
+
+	return values;
+}
+
+std::vector<XMFLOAT3> Animation::GetTranslationValues(std::string temp1) {
+	std::string value;
+	XMFLOAT3 vectorValue;
+	std::vector<XMFLOAT3> vectorValues;
+	int count(0);
+	std::istringstream ss(temp1);
+
+	do {
+		ss >> value;
+
+		switch (count) {
+		case 0:
+			vectorValue.x = std::stof(value);
+			break;
+		case 1:
+			vectorValue.y = std::stof(value);
+			break;
+		case 2:
+			vectorValue.z = std::stof(value);
+			vectorValues.push_back(vectorValue);
+			count = -1;
+			break;
+		}
+		count++;
+	} while (ss);
+
+	return vectorValues;
 }
 
 void Animation::UpdateMatrices() {
@@ -194,7 +199,7 @@ void Animation::UpdateMatrices() {
 	mRotY = XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	mRotZ = XMMatrixRotationZ(XMConvertToRadians(rotation.z));
 	mTrans = XMMatrixTranslationFromVector(XMLoadFloat4(&worldPosition));
-	worldMatrix = mRotZ * mRotX * mRotY * mTrans;
+	worldMatrix = mRotX * mRotY * mRotZ * mTrans;
 
 	for (int x(0); x < ModelParts.size(); x++)
 	{
@@ -207,7 +212,7 @@ void Animation::UpdateMatrices() {
 		mRotY = XMMatrixRotationY(XMConvertToRadians(ModelParts[x].rotation.y));
 		mRotZ = XMMatrixRotationZ(XMConvertToRadians(ModelParts[x].rotation.z));
 		mTrans = XMMatrixTranslationFromVector(XMLoadFloat4(&ModelParts[x].offset));
-		ModelParts[x].modelMatrix = mRotZ * mRotX * mRotY * mTrans * parentMatrix;
+		ModelParts[x].modelMatrix = mRotX * mRotY * mRotZ * mTrans * parentMatrix;
 	}
 }
 

@@ -1,0 +1,1474 @@
+  <library_animations>
+    <animation id="root.translate">
+      <source id="root.translate_root_translate-input">
+        <float_array id="root.translate_root_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#root.translate_root_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="root.translate_root_translate-output">
+        <float_array id="root.translate_root_translate-output-array" count="12">1.027778029441834 75.64472198486328 0 0 44.7021484375 0 -19.36222648620606 44.7021484375 0 -19.36222648620606 44.7021484375 12.6501989364624</float_array>
+        <technique_common>
+          <accessor source="#root.translate_root_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="root.rotateX">
+      <source id="root.rotateX_root_rotateX.ANGLE-input">
+        <float_array id="root.rotateX_root_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#root.rotateX_root_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="root.rotateX_root_rotateX.ANGLE-output">
+        <float_array id="root.rotateX_root_rotateX.ANGLE-output-array" count="4">0 0 0 21.96674919128418</float_array>
+        <technique_common>
+          <accessor source="#root.rotateX_root_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="root.rotateY">
+      <source id="root.rotateY_root_rotateY.ANGLE-input">
+        <float_array id="root.rotateY_root_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#root.rotateY_root_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="root.rotateY_root_rotateY.ANGLE-output">
+        <float_array id="root.rotateY_root_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#root.rotateY_root_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="root.rotateZ">
+      <source id="root.rotateZ_root_rotateZ.ANGLE-input">
+        <float_array id="root.rotateZ_root_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#root.rotateZ_root_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="root.rotateZ_root_rotateZ.ANGLE-output">
+        <float_array id="root.rotateZ_root_rotateZ.ANGLE-output-array" count="4">0 0 23.28437995910645 23.28437995910645</float_array>
+        <technique_common>
+          <accessor source="#root.rotateZ_root_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="root.visibility">
+      <source id="root.visibility_root_visibility6-input">
+        <float_array id="root.visibility_root_visibility6-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#root.visibility_root_visibility6-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="root.visibility_root_visibility6-output">
+        <float_array id="root.visibility_root_visibility6-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#root.visibility_root_visibility6-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="pelvis.translate">
+      <source id="pelvis.translate_pelvis_translate-input">
+        <float_array id="pelvis.translate_pelvis_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#pelvis.translate_pelvis_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="pelvis.translate_pelvis_translate-output">
+        <float_array id="pelvis.translate_pelvis_translate-output-array" count="12">-0.2500109970569611 15.25 -0.0000049999998736 0 0 0 0 0 0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#pelvis.translate_pelvis_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="pelvis.rotateX">
+      <source id="pelvis.rotateX_pelvis_rotateX.ANGLE-input">
+        <float_array id="pelvis.rotateX_pelvis_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#pelvis.rotateX_pelvis_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="pelvis.rotateX_pelvis_rotateX.ANGLE-output">
+        <float_array id="pelvis.rotateX_pelvis_rotateX.ANGLE-output-array" count="4">18.9999885559082 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#pelvis.rotateX_pelvis_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="pelvis.rotateY">
+      <source id="pelvis.rotateY_pelvis_rotateY.ANGLE-input">
+        <float_array id="pelvis.rotateY_pelvis_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#pelvis.rotateY_pelvis_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="pelvis.rotateY_pelvis_rotateY.ANGLE-output">
+        <float_array id="pelvis.rotateY_pelvis_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#pelvis.rotateY_pelvis_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="pelvis.rotateZ">
+      <source id="pelvis.rotateZ_pelvis_rotateZ.ANGLE-input">
+        <float_array id="pelvis.rotateZ_pelvis_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#pelvis.rotateZ_pelvis_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="pelvis.rotateZ_pelvis_rotateZ.ANGLE-output">
+        <float_array id="pelvis.rotateZ_pelvis_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#pelvis.rotateZ_pelvis_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="pelvis.visibility">
+      <source id="pelvis.visibility_pelvis_visibility5-input">
+        <float_array id="pelvis.visibility_pelvis_visibility5-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#pelvis.visibility_pelvis_visibility5-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="pelvis.visibility_pelvis_visibility5-output">
+        <float_array id="pelvis.visibility_pelvis_visibility5-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#pelvis.visibility_pelvis_visibility5-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="body.translate">
+      <source id="body.translate_body_translate-input">
+        <float_array id="body.translate_body_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#body.translate_body_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="body.translate_body_translate-output">
+        <float_array id="body.translate_body_translate-output-array" count="12">0.5000991225242615 43.7499885559082 0.0000030000001061 0 0 0 0 0 0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#body.translate_body_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="body.rotateX">
+      <source id="body.rotateX_body_rotateX.ANGLE-input">
+        <float_array id="body.rotateX_body_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#body.rotateX_body_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="body.rotateX_body_rotateX.ANGLE-output">
+        <float_array id="body.rotateX_body_rotateX.ANGLE-output-array" count="4">16.99999809265137 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#body.rotateX_body_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="body.rotateY">
+      <source id="body.rotateY_body_rotateY.ANGLE-input">
+        <float_array id="body.rotateY_body_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#body.rotateY_body_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="body.rotateY_body_rotateY.ANGLE-output">
+        <float_array id="body.rotateY_body_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#body.rotateY_body_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="body.rotateZ">
+      <source id="body.rotateZ_body_rotateZ.ANGLE-input">
+        <float_array id="body.rotateZ_body_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#body.rotateZ_body_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="body.rotateZ_body_rotateZ.ANGLE-output">
+        <float_array id="body.rotateZ_body_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#body.rotateZ_body_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="body.visibility">
+      <source id="body.visibility_body_visibility4-input">
+        <float_array id="body.visibility_body_visibility4-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#body.visibility_body_visibility4-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="body.visibility_body_visibility4-output">
+        <float_array id="body.visibility_body_visibility4-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#body.visibility_body_visibility4-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_shoulder.translate">
+      <source id="left_shoulder.translate_left_shoulder_translate-input">
+        <float_array id="left_shoulder.translate_left_shoulder_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.translate_left_shoulder_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_shoulder.translate_left_shoulder_translate-output">
+        <float_array id="left_shoulder.translate_left_shoulder_translate-output-array" count="12">46 0.0000076293954407 -0.0099868774414062 0 0 0 0 0 0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.translate_left_shoulder_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_shoulder.rotateX">
+      <source id="left_shoulder.rotateX_left_shoulder_rotateX.ANGLE-input">
+        <float_array id="left_shoulder.rotateX_left_shoulder_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.rotateX_left_shoulder_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_shoulder.rotateX_left_shoulder_rotateX.ANGLE-output">
+        <float_array id="left_shoulder.rotateX_left_shoulder_rotateX.ANGLE-output-array" count="4">11.58757019042969 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.rotateX_left_shoulder_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_shoulder.rotateY">
+      <source id="left_shoulder.rotateY_left_shoulder_rotateY.ANGLE-input">
+        <float_array id="left_shoulder.rotateY_left_shoulder_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.rotateY_left_shoulder_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_shoulder.rotateY_left_shoulder_rotateY.ANGLE-output">
+        <float_array id="left_shoulder.rotateY_left_shoulder_rotateY.ANGLE-output-array" count="4">-48.63127517700195 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.rotateY_left_shoulder_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_shoulder.rotateZ">
+      <source id="left_shoulder.rotateZ_left_shoulder_rotateZ.ANGLE-input">
+        <float_array id="left_shoulder.rotateZ_left_shoulder_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.rotateZ_left_shoulder_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_shoulder.rotateZ_left_shoulder_rotateZ.ANGLE-output">
+        <float_array id="left_shoulder.rotateZ_left_shoulder_rotateZ.ANGLE-output-array" count="4">-58.83498001098633 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.rotateZ_left_shoulder_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_shoulder.visibility">
+      <source id="left_shoulder.visibility_left_shoulder_visibility3-input">
+        <float_array id="left_shoulder.visibility_left_shoulder_visibility3-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.visibility_left_shoulder_visibility3-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_shoulder.visibility_left_shoulder_visibility3-output">
+        <float_array id="left_shoulder.visibility_left_shoulder_visibility3-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#left_shoulder.visibility_left_shoulder_visibility3-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_elbow.translate">
+      <source id="left_elbow.translate_left_elbow_translate-input">
+        <float_array id="left_elbow.translate_left_elbow_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.translate_left_elbow_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_elbow.translate_left_elbow_translate-output">
+        <float_array id="left_elbow.translate_left_elbow_translate-output-array" count="12">34.25548934936523 -0.5038375854492188 -0.004058837890625 0 0 0 0 0 0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.translate_left_elbow_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_elbow.rotateX">
+      <source id="left_elbow.rotateX_left_elbow_rotateX.ANGLE-input">
+        <float_array id="left_elbow.rotateX_left_elbow_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.rotateX_left_elbow_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_elbow.rotateX_left_elbow_rotateX.ANGLE-output">
+        <float_array id="left_elbow.rotateX_left_elbow_rotateX.ANGLE-output-array" count="4">3.081952810287476 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.rotateX_left_elbow_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_elbow.rotateY">
+      <source id="left_elbow.rotateY_left_elbow_rotateY.ANGLE-input">
+        <float_array id="left_elbow.rotateY_left_elbow_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.rotateY_left_elbow_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_elbow.rotateY_left_elbow_rotateY.ANGLE-output">
+        <float_array id="left_elbow.rotateY_left_elbow_rotateY.ANGLE-output-array" count="4">-15.47661018371582 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.rotateY_left_elbow_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_elbow.rotateZ">
+      <source id="left_elbow.rotateZ_left_elbow_rotateZ.ANGLE-input">
+        <float_array id="left_elbow.rotateZ_left_elbow_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.rotateZ_left_elbow_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_elbow.rotateZ_left_elbow_rotateZ.ANGLE-output">
+        <float_array id="left_elbow.rotateZ_left_elbow_rotateZ.ANGLE-output-array" count="4">-22.40260887145996 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.rotateZ_left_elbow_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_elbow.visibility">
+      <source id="left_elbow.visibility_left_elbow_visibility2-input">
+        <float_array id="left_elbow.visibility_left_elbow_visibility2-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.visibility_left_elbow_visibility2-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_elbow.visibility_left_elbow_visibility2-output">
+        <float_array id="left_elbow.visibility_left_elbow_visibility2-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#left_elbow.visibility_left_elbow_visibility2-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_wrist.translate">
+      <source id="left_wrist.translate_left_wrist_translate-input">
+        <float_array id="left_wrist.translate_left_wrist_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.translate_left_wrist_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_wrist.translate_left_wrist_translate-output">
+        <float_array id="left_wrist.translate_left_wrist_translate-output-array" count="12">55.2500114440918 -0.9997100234031677 0.003967999946326 60 0 0 60 0 0 60 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.translate_left_wrist_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_wrist.rotateX">
+      <source id="left_wrist.rotateX_left_wrist_rotateX.ANGLE-input">
+        <float_array id="left_wrist.rotateX_left_wrist_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.rotateX_left_wrist_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_wrist.rotateX_left_wrist_rotateX.ANGLE-output">
+        <float_array id="left_wrist.rotateX_left_wrist_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.rotateX_left_wrist_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_wrist.rotateY">
+      <source id="left_wrist.rotateY_left_wrist_rotateY.ANGLE-input">
+        <float_array id="left_wrist.rotateY_left_wrist_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.rotateY_left_wrist_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_wrist.rotateY_left_wrist_rotateY.ANGLE-output">
+        <float_array id="left_wrist.rotateY_left_wrist_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.rotateY_left_wrist_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_wrist.rotateZ">
+      <source id="left_wrist.rotateZ_left_wrist_rotateZ.ANGLE-input">
+        <float_array id="left_wrist.rotateZ_left_wrist_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.rotateZ_left_wrist_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_wrist.rotateZ_left_wrist_rotateZ.ANGLE-output">
+        <float_array id="left_wrist.rotateZ_left_wrist_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.rotateZ_left_wrist_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_wrist.visibility">
+      <source id="left_wrist.visibility_left_wrist_visibility-input">
+        <float_array id="left_wrist.visibility_left_wrist_visibility-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.visibility_left_wrist_visibility-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_wrist.visibility_left_wrist_visibility-output">
+        <float_array id="left_wrist.visibility_left_wrist_visibility-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#left_wrist.visibility_left_wrist_visibility-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_shoulder.translate">
+      <source id="right_shoulder.translate_right_shoulder_translate-input">
+        <float_array id="right_shoulder.translate_right_shoulder_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.translate_right_shoulder_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_shoulder.translate_right_shoulder_translate-output">
+        <float_array id="right_shoulder.translate_right_shoulder_translate-output-array" count="12">-44.50001907348633 0.5 -0.0000228881799557 0 0 0 0 0 0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.translate_right_shoulder_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_shoulder.rotateX">
+      <source id="right_shoulder.rotateX_right_shoulder_rotateX.ANGLE-input">
+        <float_array id="right_shoulder.rotateX_right_shoulder_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.rotateX_right_shoulder_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_shoulder.rotateX_right_shoulder_rotateX.ANGLE-output">
+        <float_array id="right_shoulder.rotateX_right_shoulder_rotateX.ANGLE-output-array" count="4">45.59836959838867 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.rotateX_right_shoulder_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_shoulder.rotateY">
+      <source id="right_shoulder.rotateY_right_shoulder_rotateY.ANGLE-input">
+        <float_array id="right_shoulder.rotateY_right_shoulder_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.rotateY_right_shoulder_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_shoulder.rotateY_right_shoulder_rotateY.ANGLE-output">
+        <float_array id="right_shoulder.rotateY_right_shoulder_rotateY.ANGLE-output-array" count="4">32.31251525878906 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.rotateY_right_shoulder_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_shoulder.rotateZ">
+      <source id="right_shoulder.rotateZ_right_shoulder_rotateZ.ANGLE-input">
+        <float_array id="right_shoulder.rotateZ_right_shoulder_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.rotateZ_right_shoulder_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_shoulder.rotateZ_right_shoulder_rotateZ.ANGLE-output">
+        <float_array id="right_shoulder.rotateZ_right_shoulder_rotateZ.ANGLE-output-array" count="4">64.57614135742188 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.rotateZ_right_shoulder_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_shoulder.visibility">
+      <source id="right_shoulder.visibility_right_shoulder_visibility3-input">
+        <float_array id="right_shoulder.visibility_right_shoulder_visibility3-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.visibility_right_shoulder_visibility3-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_shoulder.visibility_right_shoulder_visibility3-output">
+        <float_array id="right_shoulder.visibility_right_shoulder_visibility3-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#right_shoulder.visibility_right_shoulder_visibility3-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_elbow.translate">
+      <source id="right_elbow.translate_right_elbow_translate-input">
+        <float_array id="right_elbow.translate_right_elbow_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.translate_right_elbow_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_elbow.translate_right_elbow_translate-output">
+        <float_array id="right_elbow.translate_right_elbow_translate-output-array" count="12">-34.02291870117188 0.2323379963636398 -0.0098419189453125 0 0 0 0 0 0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.translate_right_elbow_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_elbow.rotateX">
+      <source id="right_elbow.rotateX_right_elbow_rotateX.ANGLE-input">
+        <float_array id="right_elbow.rotateX_right_elbow_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.rotateX_right_elbow_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_elbow.rotateX_right_elbow_rotateX.ANGLE-output">
+        <float_array id="right_elbow.rotateX_right_elbow_rotateX.ANGLE-output-array" count="4">-28.84540748596191 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.rotateX_right_elbow_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_elbow.rotateY">
+      <source id="right_elbow.rotateY_right_elbow_rotateY.ANGLE-input">
+        <float_array id="right_elbow.rotateY_right_elbow_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.rotateY_right_elbow_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_elbow.rotateY_right_elbow_rotateY.ANGLE-output">
+        <float_array id="right_elbow.rotateY_right_elbow_rotateY.ANGLE-output-array" count="4">36.20635986328125 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.rotateY_right_elbow_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_elbow.rotateZ">
+      <source id="right_elbow.rotateZ_right_elbow_rotateZ.ANGLE-input">
+        <float_array id="right_elbow.rotateZ_right_elbow_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.rotateZ_right_elbow_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_elbow.rotateZ_right_elbow_rotateZ.ANGLE-output">
+        <float_array id="right_elbow.rotateZ_right_elbow_rotateZ.ANGLE-output-array" count="4">-10.3255786895752 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.rotateZ_right_elbow_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_elbow.visibility">
+      <source id="right_elbow.visibility_right_elbow_visibility2-input">
+        <float_array id="right_elbow.visibility_right_elbow_visibility2-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.visibility_right_elbow_visibility2-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_elbow.visibility_right_elbow_visibility2-output">
+        <float_array id="right_elbow.visibility_right_elbow_visibility2-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#right_elbow.visibility_right_elbow_visibility2-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_wrist.translate">
+      <source id="right_wrist.translate_right_wrist_translate-input">
+        <float_array id="right_wrist.translate_right_wrist_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.translate_right_wrist_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_wrist.translate_right_wrist_translate-output">
+        <float_array id="right_wrist.translate_right_wrist_translate-output-array" count="12">-60.00038146972656 -1.75018298625946 0.0071560000069439 -60.00038146972656 0 0 -60.00038146972656 0 0 -60.00038146972656 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.translate_right_wrist_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_wrist.rotateX">
+      <source id="right_wrist.rotateX_right_wrist_rotateX.ANGLE-input">
+        <float_array id="right_wrist.rotateX_right_wrist_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.rotateX_right_wrist_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_wrist.rotateX_right_wrist_rotateX.ANGLE-output">
+        <float_array id="right_wrist.rotateX_right_wrist_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.rotateX_right_wrist_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_wrist.rotateY">
+      <source id="right_wrist.rotateY_right_wrist_rotateY.ANGLE-input">
+        <float_array id="right_wrist.rotateY_right_wrist_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.rotateY_right_wrist_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_wrist.rotateY_right_wrist_rotateY.ANGLE-output">
+        <float_array id="right_wrist.rotateY_right_wrist_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.rotateY_right_wrist_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_wrist.rotateZ">
+      <source id="right_wrist.rotateZ_right_wrist_rotateZ.ANGLE-input">
+        <float_array id="right_wrist.rotateZ_right_wrist_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.rotateZ_right_wrist_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_wrist.rotateZ_right_wrist_rotateZ.ANGLE-output">
+        <float_array id="right_wrist.rotateZ_right_wrist_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.rotateZ_right_wrist_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_wrist.visibility">
+      <source id="right_wrist.visibility_right_wrist_visibility-input">
+        <float_array id="right_wrist.visibility_right_wrist_visibility-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.visibility_right_wrist_visibility-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_wrist.visibility_right_wrist_visibility-output">
+        <float_array id="right_wrist.visibility_right_wrist_visibility-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#right_wrist.visibility_right_wrist_visibility-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="neck.translate">
+      <source id="neck.translate_neck_translate-input">
+        <float_array id="neck.translate_neck_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#neck.translate_neck_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="neck.translate_neck_translate-output">
+        <float_array id="neck.translate_neck_translate-output-array" count="12">0.2499829977750778 36.62543106079102 26.00015068054199 0.2499829977750778 36.62543106079102 26.00015068054199 0.2499829977750778 36.62543106079102 26.00015068054199 0.2499829977750778 36.62543106079102 26.00015068054199</float_array>
+        <technique_common>
+          <accessor source="#neck.translate_neck_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="neck.rotateX">
+      <source id="neck.rotateX_neck_rotateX.ANGLE-input">
+        <float_array id="neck.rotateX_neck_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#neck.rotateX_neck_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="neck.rotateX_neck_rotateX.ANGLE-output">
+        <float_array id="neck.rotateX_neck_rotateX.ANGLE-output-array" count="4">26.00008773803711 26.00008773803711 26.00008773803711 26.00008773803711</float_array>
+        <technique_common>
+          <accessor source="#neck.rotateX_neck_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="neck.rotateY">
+      <source id="neck.rotateY_neck_rotateY.ANGLE-input">
+        <float_array id="neck.rotateY_neck_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#neck.rotateY_neck_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="neck.rotateY_neck_rotateY.ANGLE-output">
+        <float_array id="neck.rotateY_neck_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#neck.rotateY_neck_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="neck.rotateZ">
+      <source id="neck.rotateZ_neck_rotateZ.ANGLE-input">
+        <float_array id="neck.rotateZ_neck_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#neck.rotateZ_neck_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="neck.rotateZ_neck_rotateZ.ANGLE-output">
+        <float_array id="neck.rotateZ_neck_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#neck.rotateZ_neck_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="neck.visibility">
+      <source id="neck.visibility_neck_visibility-input">
+        <float_array id="neck.visibility_neck_visibility-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#neck.visibility_neck_visibility-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="neck.visibility_neck_visibility-output">
+        <float_array id="neck.visibility_neck_visibility-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#neck.visibility_neck_visibility-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_hip.translate">
+      <source id="left_hip.translate_left_hip_translate-input">
+        <float_array id="left_hip.translate_left_hip_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_hip.translate_left_hip_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_hip.translate_left_hip_translate-output">
+        <float_array id="left_hip.translate_left_hip_translate-output-array" count="12">19.5 -7.724990844726563 0 0 40 0 0 40 0 0 40 0</float_array>
+        <technique_common>
+          <accessor source="#left_hip.translate_left_hip_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_hip.rotateX">
+      <source id="left_hip.rotateX_left_hip_rotateX.ANGLE-input">
+        <float_array id="left_hip.rotateX_left_hip_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_hip.rotateX_left_hip_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_hip.rotateX_left_hip_rotateX.ANGLE-output">
+        <float_array id="left_hip.rotateX_left_hip_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_hip.rotateX_left_hip_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_hip.rotateY">
+      <source id="left_hip.rotateY_left_hip_rotateY.ANGLE-input">
+        <float_array id="left_hip.rotateY_left_hip_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_hip.rotateY_left_hip_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_hip.rotateY_left_hip_rotateY.ANGLE-output">
+        <float_array id="left_hip.rotateY_left_hip_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_hip.rotateY_left_hip_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_hip.rotateZ">
+      <source id="left_hip.rotateZ_left_hip_rotateZ.ANGLE-input">
+        <float_array id="left_hip.rotateZ_left_hip_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_hip.rotateZ_left_hip_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_hip.rotateZ_left_hip_rotateZ.ANGLE-output">
+        <float_array id="left_hip.rotateZ_left_hip_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_hip.rotateZ_left_hip_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_hip.visibility">
+      <source id="left_hip.visibility_left_hip_visibility3-input">
+        <float_array id="left_hip.visibility_left_hip_visibility3-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_hip.visibility_left_hip_visibility3-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_hip.visibility_left_hip_visibility3-output">
+        <float_array id="left_hip.visibility_left_hip_visibility3-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#left_hip.visibility_left_hip_visibility3-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_knee.translate">
+      <source id="left_knee.translate_left_knee_translate-input">
+        <float_array id="left_knee.translate_left_knee_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_knee.translate_left_knee_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_knee.translate_left_knee_translate-output">
+        <float_array id="left_knee.translate_left_knee_translate-output-array" count="12">0.0000060000002122 -22.20000076293945 0 0.0000060000002122 -22.20000076293945 0 0.0000060000002122 -22.20000076293945 0 0.0000060000002122 -22.20000076293945 0</float_array>
+        <technique_common>
+          <accessor source="#left_knee.translate_left_knee_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_knee.rotateX">
+      <source id="left_knee.rotateX_left_knee_rotateX.ANGLE-input">
+        <float_array id="left_knee.rotateX_left_knee_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_knee.rotateX_left_knee_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_knee.rotateX_left_knee_rotateX.ANGLE-output">
+        <float_array id="left_knee.rotateX_left_knee_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_knee.rotateX_left_knee_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_knee.rotateY">
+      <source id="left_knee.rotateY_left_knee_rotateY.ANGLE-input">
+        <float_array id="left_knee.rotateY_left_knee_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_knee.rotateY_left_knee_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_knee.rotateY_left_knee_rotateY.ANGLE-output">
+        <float_array id="left_knee.rotateY_left_knee_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_knee.rotateY_left_knee_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_knee.rotateZ">
+      <source id="left_knee.rotateZ_left_knee_rotateZ.ANGLE-input">
+        <float_array id="left_knee.rotateZ_left_knee_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_knee.rotateZ_left_knee_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_knee.rotateZ_left_knee_rotateZ.ANGLE-output">
+        <float_array id="left_knee.rotateZ_left_knee_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_knee.rotateZ_left_knee_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_knee.visibility">
+      <source id="left_knee.visibility_left_knee_visibility2-input">
+        <float_array id="left_knee.visibility_left_knee_visibility2-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_knee.visibility_left_knee_visibility2-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_knee.visibility_left_knee_visibility2-output">
+        <float_array id="left_knee.visibility_left_knee_visibility2-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#left_knee.visibility_left_knee_visibility2-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_ankle.translate">
+      <source id="left_ankle.translate_left_ankle_translate-input">
+        <float_array id="left_ankle.translate_left_ankle_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.translate_left_ankle_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_ankle.translate_left_ankle_translate-output">
+        <float_array id="left_ankle.translate_left_ankle_translate-output-array" count="12">-0.8001520037651062 -36.39999008178711 -0.0000979999967967 -0.8001520037651062 -36.39999008178711 -0.0000979999967967 -0.8001520037651062 -36.39999008178711 -0.0000979999967967 -0.8001520037651062 -36.39999008178711 -0.0000979999967967</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.translate_left_ankle_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_ankle.rotateX">
+      <source id="left_ankle.rotateX_left_ankle_rotateX.ANGLE-input">
+        <float_array id="left_ankle.rotateX_left_ankle_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.rotateX_left_ankle_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_ankle.rotateX_left_ankle_rotateX.ANGLE-output">
+        <float_array id="left_ankle.rotateX_left_ankle_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.rotateX_left_ankle_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_ankle.rotateY">
+      <source id="left_ankle.rotateY_left_ankle_rotateY.ANGLE-input">
+        <float_array id="left_ankle.rotateY_left_ankle_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.rotateY_left_ankle_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_ankle.rotateY_left_ankle_rotateY.ANGLE-output">
+        <float_array id="left_ankle.rotateY_left_ankle_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.rotateY_left_ankle_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_ankle.rotateZ">
+      <source id="left_ankle.rotateZ_left_ankle_rotateZ.ANGLE-input">
+        <float_array id="left_ankle.rotateZ_left_ankle_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.rotateZ_left_ankle_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_ankle.rotateZ_left_ankle_rotateZ.ANGLE-output">
+        <float_array id="left_ankle.rotateZ_left_ankle_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.rotateZ_left_ankle_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="left_ankle.visibility">
+      <source id="left_ankle.visibility_left_ankle_visibility-input">
+        <float_array id="left_ankle.visibility_left_ankle_visibility-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.visibility_left_ankle_visibility-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="left_ankle.visibility_left_ankle_visibility-output">
+        <float_array id="left_ankle.visibility_left_ankle_visibility-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#left_ankle.visibility_left_ankle_visibility-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_hip.translate">
+      <source id="right_hip.translate_right_hip_translate-input">
+        <float_array id="right_hip.translate_right_hip_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_hip.translate_right_hip_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_hip.translate_right_hip_translate-output">
+        <float_array id="right_hip.translate_right_hip_translate-output-array" count="12">-19.5 -7.724990844726563 0 0 40 0 0 40 0 0 40 0</float_array>
+        <technique_common>
+          <accessor source="#right_hip.translate_right_hip_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_hip.rotateX">
+      <source id="right_hip.rotateX_right_hip_rotateX.ANGLE-input">
+        <float_array id="right_hip.rotateX_right_hip_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_hip.rotateX_right_hip_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_hip.rotateX_right_hip_rotateX.ANGLE-output">
+        <float_array id="right_hip.rotateX_right_hip_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_hip.rotateX_right_hip_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_hip.rotateY">
+      <source id="right_hip.rotateY_right_hip_rotateY.ANGLE-input">
+        <float_array id="right_hip.rotateY_right_hip_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_hip.rotateY_right_hip_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_hip.rotateY_right_hip_rotateY.ANGLE-output">
+        <float_array id="right_hip.rotateY_right_hip_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_hip.rotateY_right_hip_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_hip.rotateZ">
+      <source id="right_hip.rotateZ_right_hip_rotateZ.ANGLE-input">
+        <float_array id="right_hip.rotateZ_right_hip_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_hip.rotateZ_right_hip_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_hip.rotateZ_right_hip_rotateZ.ANGLE-output">
+        <float_array id="right_hip.rotateZ_right_hip_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_hip.rotateZ_right_hip_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_hip.visibility">
+      <source id="right_hip.visibility_right_hip_visibility3-input">
+        <float_array id="right_hip.visibility_right_hip_visibility3-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_hip.visibility_right_hip_visibility3-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_hip.visibility_right_hip_visibility3-output">
+        <float_array id="right_hip.visibility_right_hip_visibility3-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#right_hip.visibility_right_hip_visibility3-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_knee.translate">
+      <source id="right_knee.translate_right_knee_translate-input">
+        <float_array id="right_knee.translate_right_knee_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_knee.translate_right_knee_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_knee.translate_right_knee_translate-output">
+        <float_array id="right_knee.translate_right_knee_translate-output-array" count="12">0.0000060000002122 -22 0 0.0000060000002122 -22 0 0.0000060000002122 -22 0 0.0000060000002122 -22 0</float_array>
+        <technique_common>
+          <accessor source="#right_knee.translate_right_knee_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_knee.rotateX">
+      <source id="right_knee.rotateX_right_knee_rotateX.ANGLE-input">
+        <float_array id="right_knee.rotateX_right_knee_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_knee.rotateX_right_knee_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_knee.rotateX_right_knee_rotateX.ANGLE-output">
+        <float_array id="right_knee.rotateX_right_knee_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_knee.rotateX_right_knee_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_knee.rotateY">
+      <source id="right_knee.rotateY_right_knee_rotateY.ANGLE-input">
+        <float_array id="right_knee.rotateY_right_knee_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_knee.rotateY_right_knee_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_knee.rotateY_right_knee_rotateY.ANGLE-output">
+        <float_array id="right_knee.rotateY_right_knee_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_knee.rotateY_right_knee_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_knee.rotateZ">
+      <source id="right_knee.rotateZ_right_knee_rotateZ.ANGLE-input">
+        <float_array id="right_knee.rotateZ_right_knee_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_knee.rotateZ_right_knee_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_knee.rotateZ_right_knee_rotateZ.ANGLE-output">
+        <float_array id="right_knee.rotateZ_right_knee_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_knee.rotateZ_right_knee_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_knee.visibility">
+      <source id="right_knee.visibility_right_knee_visibility2-input">
+        <float_array id="right_knee.visibility_right_knee_visibility2-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_knee.visibility_right_knee_visibility2-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_knee.visibility_right_knee_visibility2-output">
+        <float_array id="right_knee.visibility_right_knee_visibility2-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#right_knee.visibility_right_knee_visibility2-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_ankle.translate">
+      <source id="right_ankle.translate_right_ankle_translate-input">
+        <float_array id="right_ankle.translate_right_ankle_translate-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.translate_right_ankle_translate-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_ankle.translate_right_ankle_translate-output">
+        <float_array id="right_ankle.translate_right_ankle_translate-output-array" count="12">0.1999109983444214 -36.79999923706055 0.0000389999986509 0.1999109983444214 -36.79999923706055 0.0000389999986509 0.1999109983444214 -36.79999923706055 0.0000389999986509 0.1999109983444214 -36.79999923706055 0.0000389999986509</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.translate_right_ankle_translate-output-array" count="4" stride="3">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_ankle.rotateX">
+      <source id="right_ankle.rotateX_right_ankle_rotateX.ANGLE-input">
+        <float_array id="right_ankle.rotateX_right_ankle_rotateX.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.rotateX_right_ankle_rotateX.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_ankle.rotateX_right_ankle_rotateX.ANGLE-output">
+        <float_array id="right_ankle.rotateX_right_ankle_rotateX.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.rotateX_right_ankle_rotateX.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_ankle.rotateY">
+      <source id="right_ankle.rotateY_right_ankle_rotateY.ANGLE-input">
+        <float_array id="right_ankle.rotateY_right_ankle_rotateY.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.rotateY_right_ankle_rotateY.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_ankle.rotateY_right_ankle_rotateY.ANGLE-output">
+        <float_array id="right_ankle.rotateY_right_ankle_rotateY.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.rotateY_right_ankle_rotateY.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_ankle.rotateZ">
+      <source id="right_ankle.rotateZ_right_ankle_rotateZ.ANGLE-input">
+        <float_array id="right_ankle.rotateZ_right_ankle_rotateZ.ANGLE-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.rotateZ_right_ankle_rotateZ.ANGLE-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_ankle.rotateZ_right_ankle_rotateZ.ANGLE-output">
+        <float_array id="right_ankle.rotateZ_right_ankle_rotateZ.ANGLE-output-array" count="4">0 0 0 0</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.rotateZ_right_ankle_rotateZ.ANGLE-output-array" count="4" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+    <animation id="right_ankle.visibility">
+      <source id="right_ankle.visibility_right_ankle_visibility-input">
+        <float_array id="right_ankle.visibility_right_ankle_visibility-input-array" count="4">0.0416666679084301 0.3333333432674408 1 1.458333373069763</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.visibility_right_ankle_visibility-input-array" count="4" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="right_ankle.visibility_right_ankle_visibility-output">
+        <float_array id="right_ankle.visibility_right_ankle_visibility-output-array" count="4">1 1 1 1</float_array>
+        <technique_common>
+          <accessor source="#right_ankle.visibility_right_ankle_visibility-output-array" count="4" stride="1">
+            <param type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+    </animation>
+  </library_animations>

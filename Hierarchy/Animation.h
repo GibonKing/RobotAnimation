@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <iostream>
 
 __declspec(align(16)) class Animation
 {
@@ -18,12 +19,17 @@ public:
 	void SetWorldPosition(float fX, float fY, float fZ);
 	void SetRotation(float fRotY);
 	void SetupModel();
-	void SetupAnimations();
+	void SetupAnimations(std::vector<std::string> filePaths);
+	void SetupAnimation(std::string filePath);
 
 	//Update Functions
 	void Update();
 	void UpdateMatrices();
 	void Draw();
+
+	//Extra Functions
+	std::vector<float> GetRotationValues(std::string temp1);
+	std::vector<XMFLOAT3> GetTranslationValues(std::string temp1);
 private:
 	XMFLOAT4 worldPosition;
 	XMFLOAT4 rotation;
