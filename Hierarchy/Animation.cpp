@@ -3,7 +3,7 @@
 Animation::Animation(float fX, float fY, float fZ, float fRotY) {
 	SetRotation(fRotY);
 	SetupModel();
-	SetupAnimations({ "Resources/Model/RobotIdleAnim.dae" });
+	SetupAnimations({ "Resources/Model/RobotIdleAnim.dae", "Resources/Model/RobotAttackAnim.dae", "Resources/Model/RobotDieAnimDAE.txt" });
 	SetWorldPosition(fX, fY, fZ);
 }
 
@@ -75,8 +75,10 @@ void Animation::SetupAnimation(std::string filePath) {
 	std::string line, temp1, part, prevPart, type;
 	int pos, pos2, modelPartsIterator = -1, modelAnimationsIterator = 0;
 	bool input;
-	std::vector<float> rotX, rotY, rotZ;
-	std::vector<XMFLOAT3> animTranslations, animRotations;
+	std::vector<float> inputTranslations, inputRotations, inputRotX, inputRotY, inputRotZ, outputRotX, outputRotY, outputRotZ;
+	std::vector<XMFLOAT3> outputTranslations, outputRotations;
+
+	std::string text = "";
 
 	while (std::getline(idleAnim, line)) {
 		//Find Part and Type Start
@@ -93,17 +95,17 @@ void Animation::SetupAnimation(std::string filePath) {
 						part = temp1.substr(1, pos - 1);
 						if (part != prevPart) {
 							if (modelPartsIterator != -1) {
-								for (int valueCount(0); valueCount < rotX.size(); valueCount++) {
-									animRotations.push_back(XMFLOAT3(rotX[valueCount], rotY[valueCount], rotZ[valueCount]));
+								for (int valueCount(0); valueCount < outputRotX.size(); valueCount++) {
+									outputRotations.push_back(XMFLOAT3(outputRotX[valueCount], outputRotY[valueCount], outputRotZ[valueCount]));
 								}
 							}
 							for (int models(0); models < ModelParts.size(); models++) {
 								if (part == ModelParts[models].name) {
 									if (modelPartsIterator != -1) {
-										ModelParts[modelPartsIterator].ModelAnimations.push_back({ animTranslations, animRotations });
+										ModelParts[modelPartsIterator].ModelAnimations.push_back({ inputTranslations, inputRotations, outputTranslations, outputRotations });
 										modelAnimationsIterator++;
-										animTranslations.clear();
-										animRotations.clear();
+										outputTranslations.clear();
+										outputRotations.clear();
 									}
 									modelPartsIterator = models;
 									break;
@@ -131,21 +133,53 @@ void Animation::SetupAnimation(std::string filePath) {
 						temp1 = temp1.substr(0, pos2);
 
 						if (type == "translate") {
-							animTranslations = GetTranslationValues(temp1);
+							outputTranslations = GetTranslationValues(temp1);
 						}
 						else if (type == "rotateX") {
-							rotX = GetRotationValues(temp1);
+							outputRotX = GetRotationValues(temp1);
 						}
 						else if (type == "rotateY") {
-							rotY = GetRotationValues(temp1);
+							outputRotY = GetRotationValues(temp1);
 						}
 						else if (type == "rotateZ") {
-							rotZ = GetRotationValues(temp1);
+							outputRotZ = GetRotationValues(temp1);
+						}
+					}
+					else {
+						pos = line.find("input");
+						if (pos != -1) {
+							pos = line.find(">");
+							temp1 = line.substr(pos + 1);
+							pos2 = temp1.find("<");
+							temp1 = temp1.substr(0, pos2);
+
+							if (type == "translate") {
+								inputTranslations = GetRotationValues(temp1);
+							}
+							else if (type == "rotateX") {
+								inputRotations = GetRotationValues(temp1);
+							}
 						}
 					}
 				}
 			}
 		//Find Values End
+	}
+
+	for (int valueCount(0); valueCount < outputRotX.size(); valueCount++) {
+		outputRotations.push_back(XMFLOAT3(outputRotX[valueCount], outputRotY[valueCount], outputRotZ[valueCount]));
+	}
+	for (int models(0); models < ModelParts.size(); models++) {
+		if (part == ModelParts[models].name) {
+			if (modelPartsIterator != -1) {
+				ModelParts[modelPartsIterator].ModelAnimations.push_back({ inputTranslations, inputRotations, outputTranslations, outputRotations });
+				modelAnimationsIterator++;
+				outputTranslations.clear();
+				outputRotations.clear();
+			}
+			modelPartsIterator = models;
+			break;
+		}
 	}
 }
 
@@ -156,7 +190,7 @@ std::vector<float> Animation::GetRotationValues(std::string temp1) {
 
 	do {
 		ss >> value;
-		values.push_back(std::stof(value));
+		values.push_back(std::stof(value)/10);
 	} while (ss);
 	values.pop_back();
 
@@ -175,13 +209,13 @@ std::vector<XMFLOAT3> Animation::GetTranslationValues(std::string temp1) {
 
 		switch (count) {
 		case 0:
-			vectorValue.x = std::stof(value);
+			vectorValue.x = std::stof(value)/10;
 			break;
 		case 1:
-			vectorValue.y = std::stof(value);
+			vectorValue.y = std::stof(value)/10;
 			break;
 		case 2:
-			vectorValue.z = std::stof(value);
+			vectorValue.z = std::stof(value)/10;
 			vectorValues.push_back(vectorValue);
 			count = -1;
 			break;
@@ -225,27 +259,43 @@ void Animation::Draw(void) {
 	}
 }
 
+void Animation::Animate() {
+	for (int i(0); i < ModelParts.size(); i++) {
+		if (ModelParts[i].rotKeyframe > 0 && ModelParts[i].rotKeyframe < ModelParts[i].ModelAnimations[animation].outputRotationValues.size()) {
+			ModelParts[i].rotation.x = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].x;
+			ModelParts[i].rotation.y = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].y;
+			ModelParts[i].rotation.z = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].z;
+		}
+	}
+	//keyframe++;
+}
+
+void Animation::UpdateKeyframe() {
+	for (int i(0); i < ModelParts.size(); i++) {
+		//Rotation
+		if (ModelParts[i].rotKeyframe >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size())
+			ModelParts[i].rotKeyframe = 0;
+		if (ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] < time)
+			ModelParts[i].rotKeyframe++;
+	}
+}
+
 void Animation::Update() {
+	//Animations
 	if (Application::s_pApp->IsKeyPressed('1')) {
-		animation = 1;	//Idle Animation
+		animation = 0;	//Idle Animation
 	}
 	if (Application::s_pApp->IsKeyPressed('2')) {
-		animation = 2;	//Attack Animation
+		animation = 1;	//Attack Animation
 	}
 	if (Application::s_pApp->IsKeyPressed('3')) {
-		animation = 3;	//Death Animation
+		animation = 2;	//Death Animation
 	}
 
-	switch (animation) {
-		case 1:	//Idle Animation
-			break;
-		case 2: //Attack Animation
-			rotation.x += 1;
-			break;
-		case 3:	//Death Animation
-			rotation.x -= 1;
-			break;
-	}
+	time += 0.0001f;
+
+	UpdateKeyframe();
+	Animate();
 
 	UpdateMatrices();
 }

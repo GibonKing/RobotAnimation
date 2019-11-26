@@ -25,7 +25,9 @@ public:
 	//Update Functions
 	void Update();
 	void UpdateMatrices();
+	void UpdateKeyframe();
 	void Draw();
+	void Animate();
 
 	//Extra Functions
 	std::vector<float> GetRotationValues(std::string temp1);
@@ -34,25 +36,27 @@ private:
 	XMFLOAT4 worldPosition;
 	XMFLOAT4 rotation;
 	XMMATRIX worldMatrix;
-	int animation = 1;
+	int animation = 0;
+	float time = 0;
 
 	struct ModelPart{
 		std::string name;
 		std::string parent = "";
-		int parentIterator;
+		int parentIterator, rotKeyframe = 0, tranKeyframe = 0;
 		XMFLOAT4 offset;
 		XMFLOAT4 rotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 		CommonMesh* modelMesh;
 		XMMATRIX modelMatrix;
 
 		struct ModelAnimation {
-			std::vector<XMFLOAT3> translationValues;
-			std::vector<XMFLOAT3> rotationValues;
+			std::vector<float> inputTranslationValues;
+			std::vector<float> inputRotationValues;
+			std::vector<XMFLOAT3> outputTranslationValues;
+			std::vector<XMFLOAT3> outputRotationValues;
 		};
 		std::vector<ModelAnimation> ModelAnimations;
 	};
 	std::vector<ModelPart> ModelParts;
-
 };
 
 #endif
