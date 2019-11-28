@@ -5,14 +5,21 @@
 
 HeightMap::HeightMap(char* filename, float gridSize)
 {
-	LoadHeightMap(filename, gridSize);
+	for (size_t i = 0; i < NUM_TEXTURE_FILES; ++i)
+	{
+		m_pTextures[i] = NULL;
+		m_pTextureViews[i] = NULL;
+	}
+	m_pSamplerState = NULL;
+	m_pMyAppCBuffer = NULL;
 
+	LoadHeightMap(filename, gridSize);
 	m_pHeightMapBuffer = NULL;
 
 	static const VertexColour MAP_COLOUR(200, 255, 255, 255);
 
 	m_HeightMapVtxCount = (m_HeightMapLength - 1) * (m_HeightMapWidth - 1) * 6;
-	m_pMapVtxs = new Vertex_Pos3fColour4ubNormal3f[m_HeightMapVtxCount];
+	m_pMapVtxs = new Vertex_Pos3fColour4ubNormal3fTex2f[m_HeightMapVtxCount];
 
 	int mapIndex = 0;
 	int vertex(0);
@@ -25,6 +32,8 @@ HeightMap::HeightMap(char* filename, float gridSize)
 	std::vector<XMFLOAT3> topNormals(normalCount);
 	std::vector<XMFLOAT3> botNormals(normalCount);
 	XMFLOAT3 zero(0.0f, 0.0f, 0.0f);
+	XMFLOAT3 v512 = XMFLOAT3(512.0f, 0.0f, 512.0f);
+	XMVECTOR vOffset = XMLoadFloat3(&v512);
 
 	int topLeft;
 	int top;
@@ -108,10 +117,21 @@ HeightMap::HeightMap(char* filename, float gridSize)
 			miBotRight = mapIndex + m_HeightMapWidth + 1;
 
 			//Vertices
-			XMFLOAT3 V0 = m_pHeightMap[mapIndex + m_HeightMapWidth];		//BottomLeft
-			XMFLOAT3 V1 = m_pHeightMap[mapIndex];							//TopLeft
-			XMFLOAT3 V2 = m_pHeightMap[mapIndex + m_HeightMapWidth + 1];	//BottomRight
-			XMFLOAT3 V3 = m_pHeightMap[mapIndex + 1];						//TopRight
+			XMVECTOR V0 = XMLoadFloat3(&m_pHeightMap[mapIndex + m_HeightMapWidth]);		//BottomLeft
+			XMVECTOR V1 = XMLoadFloat3(&m_pHeightMap[mapIndex]);							//TopLeft
+			XMVECTOR V2 = XMLoadFloat3(&m_pHeightMap[mapIndex + m_HeightMapWidth + 1]);	//BottomRight
+			XMVECTOR V3 = XMLoadFloat3(&m_pHeightMap[mapIndex + 1]);						//TopRight
+
+			// Spread textures evenly across landscape
+			XMVECTOR t0 = (V0 + vOffset) / 32.0f;
+			XMVECTOR t1 = (V1 + vOffset) / 32.0f;
+			XMVECTOR t2 = (V2 + vOffset) / 32.0f;
+			XMVECTOR t3 = (V3 + vOffset) / 32.0f;
+
+			t0 = XMVectorSwizzle(t0, 0, 2, 1, 3);
+			t1 = XMVectorSwizzle(t1, 0, 2, 1, 3);
+			t2 = XMVectorSwizzle(t2, 0, 2, 1, 3);
+			t3 = XMVectorSwizzle(t3, 0, 2, 1, 3);
 
 			//Check Array Values
 			topLeft = miTopLeft >= 0 ? miTopLeft < normalCount ? miTopLeft : -1 : -1;
@@ -124,91 +144,129 @@ HeightMap::HeightMap(char* filename, float gridSize)
 			bot = miBot >= 0 ? miBot < normalCount ? miBot : -1 : -1;
 			botRight = miBotRight >= 0 ? miBotRight < normalCount ? miBotRight : -1 : -1;
 
-			XMVECTOR avgV2V = ( //Average Normal Bottom Right
+			XMVECTOR avgV2 = ( //Average Normal Bottom Right
 				(centre == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[centre]) + XMLoadFloat3(&topNormals[centre]))) +
 				(right == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[right]))) +
 				(bot == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&topNormals[bot]))) +
 				(botRight == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[botRight]) + XMLoadFloat3(&topNormals[botRight])))
 				) / 6;
-			XMFLOAT3 avgV2;
-			XMStoreFloat3(&avgV2, avgV2V);
 
 			//Put plots into array
 			if (Even) {
 
-				XMVECTOR avgV3V = ( //Average Normal Top Right
+				XMVECTOR avgV3 = ( //Average Normal Top Right
 					(top == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[top]) + XMLoadFloat3(&topNormals[top]))) +
 					(topRight == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[topRight]))) +
 					(centre == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&topNormals[centre]))) +
 					(right == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[right]) + XMLoadFloat3(&topNormals[right])))
 					) / 6;
-				XMFLOAT3 avgV3;
-				XMStoreFloat3(&avgV3, avgV3V);
 
 				if (useGridSqrX == 0) {
 
-					XMVECTOR avgV0V = ( //Average Normal Bottom Left
+					XMVECTOR avgV0 = ( //Average Normal Bottom Left
 						(left == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[left]) + XMLoadFloat3(&topNormals[left]))) +
 						(centre == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[centre]))) +
 						(botLeft == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&topNormals[botLeft]))) +
 						(bot == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[bot]) + XMLoadFloat3(&topNormals[bot])))
 						) / 6;
-					XMFLOAT3 avgV0;
-					XMStoreFloat3(&avgV0, avgV0V);
 
-					XMVECTOR avgV1V = ( //Average Normal Top Left
+					XMVECTOR avgV1 = ( //Average Normal Top Left
 						(topLeft == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[topLeft]) + XMLoadFloat3(&topNormals[topLeft]))) +
 						(top == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[top]))) +
 						(left == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&topNormals[left]))) +
 						(centre == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[centre]) + XMLoadFloat3(&topNormals[centre])))
 						) / 6;
-					XMFLOAT3 avgV1;
-					XMStoreFloat3(&avgV1, avgV1V);
 
-					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V0, MAP_COLOUR, avgV0);
-					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V1, MAP_COLOUR, avgV1);
+					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V0, MAP_COLOUR, avgV0, t0);
+					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V1, MAP_COLOUR, avgV1, t1);
 				}
 
-				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V2, MAP_COLOUR, avgV2);
-				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V3, MAP_COLOUR, avgV3);
+				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V2, MAP_COLOUR, avgV2, t2);
+				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V3, MAP_COLOUR, avgV3, t3);
 
 				if (useGridSqrX == width - 1) {
-					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V2, MAP_COLOUR, avgV2);
+					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V2, MAP_COLOUR, avgV2, t2);
 				}
 			}
 			else {
 
-				XMVECTOR avgV1V = ( //Average Normal Top Left
+				XMVECTOR avgV1 = ( //Average Normal Top Left
 					(topLeft == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[topLeft]) + XMLoadFloat3(&topNormals[topLeft]))) +
 					(top == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[top]))) +
 					(left == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&topNormals[left]))) +
 					(centre == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[centre]) + XMLoadFloat3(&topNormals[centre])))
 					) / 6;
-				XMFLOAT3 avgV1;
-				XMStoreFloat3(&avgV1, avgV1V);
 
-				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V2, MAP_COLOUR, avgV2);
-				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V1, MAP_COLOUR, avgV1);
+				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V2, MAP_COLOUR, avgV2, t2);
+				m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V1, MAP_COLOUR, avgV1, t1);
 
 				if (useGridSqrX == 0) {
 
-					XMVECTOR avgV0V = ( //Average Normal Bottom Left
+					XMVECTOR avgV0 = ( //Average Normal Bottom Left
 						(left == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[left]) + XMLoadFloat3(&topNormals[left]))) +
 						(centre == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[centre]))) +
 						(botLeft == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&topNormals[botLeft]))) +
 						(bot == -1 ? XMVECTOR(XMLoadFloat3(&zero)) : XMVECTOR(XMLoadFloat3(&botNormals[bot]) + XMLoadFloat3(&topNormals[bot])))
 						) / 6;
-					XMFLOAT3 avgV0;
-					XMStoreFloat3(&avgV0, avgV0V);
 
-					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3f(V0, MAP_COLOUR, avgV0);
+					m_pMapVtxs[vertex++] = Vertex_Pos3fColour4ubNormal3fTex2f(V0, MAP_COLOUR, avgV0, t0);
 				}
 			}
 		}
 		Even = !Even;
 	}
 
-	m_pHeightMapBuffer = CreateImmutableVertexBuffer(Application::s_pApp->GetDevice(), sizeof Vertex_Pos3fColour4ubNormal3f * m_HeightMapVtxCount, m_pMapVtxs);
+	m_pHeightMapBuffer = CreateImmutableVertexBuffer(Application::s_pApp->GetDevice(), sizeof Vertex_Pos3fColour4ubNormal3fTex2f * m_HeightMapVtxCount, m_pMapVtxs);
+
+	for (size_t i = 0; i < NUM_TEXTURE_FILES; ++i)
+	{
+		LoadTextureFromFile(Application::s_pApp->GetDevice(), g_aTextureFileNames[i], &m_pTextures[i], &m_pTextureViews[i], &m_pSamplerState);
+	}
+
+	ReloadShader(); // This compiles the shader
+}
+
+XMFLOAT3 HeightMap::GetAveragedVertexNormal(int index, int row)
+{
+	XMFLOAT3 ret;
+
+	assert(index >= 0 && index < m_HeightMapVtxCount);
+
+	int faceIndex = (index - row) * 2; // Map vertex to face
+
+	XMVECTOR vAverage = XMLoadFloat3(GetFaceNormalPtr(faceIndex, 0)) +
+						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -1)) +
+						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -2)) +
+						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -m_FacesPerRow - 1)) +
+						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -m_FacesPerRow)) +
+						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -m_FacesPerRow + 1));
+
+	vAverage /= 6;
+
+	vAverage = XMVector3Normalize(vAverage);
+
+	XMStoreFloat3(&ret, vAverage);
+
+	return ret;
+}
+
+XMFLOAT3* HeightMap::GetFaceNormalPtr(int faceIndex, int offset)
+{
+	static XMFLOAT3 vUp(0.0f, 1.0f, 0.0f);
+
+	if (faceIndex >= m_HeightMapFaceCount) // Last row of vertices will map off the end of the face list
+		return &vUp;
+
+	assert(faceIndex >= 0 && faceIndex < m_HeightMapFaceCount);
+
+	int newIndex = faceIndex + offset;
+	int oldRow = faceIndex / m_FacesPerRow;
+	int newRow = newIndex / m_FacesPerRow;
+
+	if (newIndex < 0 || oldRow != newRow || newIndex > m_HeightMapFaceCount)
+		return &m_pFaceNormals[faceIndex];
+
+	return &m_pFaceNormals[newIndex];
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -217,14 +275,149 @@ HeightMap::HeightMap(char* filename, float gridSize)
 HeightMap::~HeightMap()
 {
 	Release(m_pHeightMapBuffer);
+
+	DeleteShader();
 }
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-void HeightMap::Draw(void)
+void HeightMap::Draw(float frameCount)
 {
-	Application::s_pApp->DrawUntexturedLit(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, m_pHeightMapBuffer, NULL, m_HeightMapVtxCount);
+	XMMATRIX worldMtx = XMMatrixIdentity();
+
+	ID3D11DeviceContext* pContext = Application::s_pApp->GetDeviceContext();
+
+	Application::s_pApp->SetWorldMatrix(worldMtx);
+
+	// Update the data in our `MyApp' cbuffer.
+	// The D3D11_MAP_WRITE_DISCARD flag is best for performance,
+	// However, when mapping, the previous buffer contents are indeterminate. So the entire buffer
+	// must be written.
+
+	if (m_pMyAppCBuffer)
+	{
+		D3D11_MAPPED_SUBRESOURCE map;
+		if (SUCCEEDED(pContext->Map(m_pMyAppCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map)))
+		{
+			// Set the buffer contents. There is only one variable to set in this case.
+			// This method relies on the offset which has been found through Shader Reflection.
+			SetCBufferFloat(map, m_frameCountOffset, frameCount);
+			pContext->Unmap(m_pMyAppCBuffer, 0);
+		}
+	}
+
+	// Bind the same constant buffer to any stages that use it.
+	if (m_psMyAppCBufferSlot != -1)
+	{
+		pContext->PSSetConstantBuffers(m_psMyAppCBufferSlot, 1, &m_pMyAppCBuffer);
+	}
+	if (m_vsMyAppCBufferSlot != -1)
+	{
+		pContext->VSSetConstantBuffers(m_vsMyAppCBufferSlot, 1, &m_pMyAppCBuffer);
+	}
+
+	if (m_psTexture0 >= 0)
+		pContext->PSSetShaderResources(m_psTexture0, 1, &m_pTextureViews[0]);
+
+	if (m_psTexture1 >= 0)
+		pContext->PSSetShaderResources(m_psTexture1, 1, &m_pTextureViews[1]);
+
+	if (m_psTexture2 >= 0)
+		pContext->PSSetShaderResources(m_psTexture2, 1, &m_pTextureViews[2]);
+
+	if (m_vsMaterialMap >= 0)
+		pContext->VSSetShaderResources(m_vsMaterialMap, 1, &m_pTextureViews[3]);
+
+	m_pSamplerState = Application::s_pApp->GetSamplerState(true, true, true);
+
+	Application::s_pApp->DrawWithShader(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, m_pHeightMapBuffer, sizeof(Vertex_Pos3fColour4ubNormal3fTex2f),
+										NULL, 0, m_HeightMapVtxCount, NULL, m_pSamplerState, &m_shader);
+}
+
+bool HeightMap::ReloadShader(void)
+{
+	DeleteShader();
+
+	ID3D11VertexShader* pVS = NULL;
+	ID3D11PixelShader* pPS = NULL;
+	ID3D11InputLayout* pIL = NULL;
+	ShaderDescription vs, ps;
+
+	ID3D11Device* pDevice = Application::s_pApp->GetDevice();
+
+	// When the CommonApp draw functions set any of the light arrays,
+	// they assume that the arrays are of CommonApp::MAX_NUM_LIGHTS
+	// in size. Using a shader compiler #define is an easy way to
+	// get this value to the shader.
+
+	char maxNumLightsValue[100];
+	_snprintf_s(maxNumLightsValue, sizeof maxNumLightsValue, _TRUNCATE, "%d", CommonApp::MAX_NUM_LIGHTS);
+
+	D3D_SHADER_MACRO aMacros[] = {
+		{
+			"MAX_NUM_LIGHTS",
+			maxNumLightsValue,
+		},
+		{NULL},
+	};
+
+	if (!CompileShadersFromFile(pDevice, "./Resources/ExampleShader.hlsl", "VSMain", &pVS, &vs, g_aVertexDesc_Pos3fColour4ubNormal3fTex2f,
+								g_vertexDescSize_Pos3fColour4ubNormal3fTex2f, &pIL, "PSMain", &pPS, &ps, aMacros))
+	{
+		return false; // false;
+	}
+
+	Application::s_pApp->CreateShaderFromCompiledShader(&m_shader, pVS, &vs, pIL, pPS, &ps);
+
+	// Find cbuffer(s) for the globals that won't get set by the CommonApp
+	// code. These are shader-specific; you have to know what you are
+	// looking for, if you're going to set it...
+
+	// Find the constant buffer which might in either shader or both.
+	// However, it should be the same size and parameter offsets in either.
+	uint32_t cBufferSize = 0;
+	if (ps.FindCBuffer("MyApp", &m_psMyAppCBufferSlot))
+	{
+		cBufferSize = ps.GetCBufferSizeBytes(m_psMyAppCBufferSlot);
+		ps.FindFloat(m_psMyAppCBufferSlot, "g_frameCount", &m_frameCountOffset);
+	}
+
+	// We have to find the constant buffer slot in the vertex shader too
+	if (vs.FindCBuffer("MyApp", &m_vsMyAppCBufferSlot))
+	{
+		cBufferSize = vs.GetCBufferSizeBytes(m_vsMyAppCBufferSlot);
+		vs.FindFloat(m_vsMyAppCBufferSlot, "g_frameCount", &m_frameCountOffset);
+	}
+
+	ps.FindTexture("g_texture0", &m_psTexture0);
+	ps.FindTexture("g_texture1", &m_psTexture1);
+	ps.FindTexture("g_texture2", &m_psTexture2);
+
+	vs.FindTexture("g_materialMap", &m_vsMaterialMap);
+
+	// Create a cbuffer, using the shader description to find out how
+	// large it needs to be.
+	if (cBufferSize > 0)
+	{
+		m_pMyAppCBuffer = CreateBuffer(pDevice, cBufferSize, D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, NULL);
+	}
+
+	// In this example we are sharing the constant buffer between both vertex and pixel shaders.
+	// This is efficient since we only update one buffer. However we could define separate constant buffers for each stage.
+	// Generally constant buffers should represent groups of variables that must be updated at the same rate.
+	// So : we might have 'per execution' 'per frame', 'per draw' constant buffers.
+
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+void HeightMap::DeleteShader()
+{
+	Release(m_pMyAppCBuffer);
+	m_shader.Reset();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -313,15 +506,11 @@ bool HeightMap::LoadHeightMap(char* filename, float gridSize)
 		for(i = 0; i < m_HeightMapWidth; i++)
 		{
 			height = bitmapImage[k];
-
 			index = (m_HeightMapWidth * j) + i;
-
 			m_pHeightMap[index].x = (float)(i - (m_HeightMapWidth / 2)) * gridSize;
 			m_pHeightMap[index].y = (float)height / 6 * gridSize;
 			m_pHeightMap[index].z = (float)((m_HeightMapLength / 2) - j) * gridSize;
-
 			pUnsmoothedMap[index].y = (float)height / 6 * gridSize;
-
 			k += 3;
 		}
 	}

@@ -6,9 +6,10 @@
 Application* Application::s_pApp = NULL;
 
 const int CAMERA_MAP = 0;
-const int CAMERA_PLANE = 1;
-const int CAMERA_GUN = 2;
-const int CAMERA_MAX = 3;
+const int CAMERA_ROTATE = 1;
+const int CAMERA_PLANE = 2;
+const int CAMERA_GUN = 3;
+const int CAMERA_MAX = 4;
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -16,6 +17,8 @@ const int CAMERA_MAX = 3;
 bool Application::HandleStart()
 {
 	s_pApp = this;
+
+	m_frameCount = 0.0f;
 
 	this->SetWindowTitle("Hierarchy");
 
@@ -29,6 +32,9 @@ bool Application::HandleStart()
 
 	m_cameraZ = 50.0f;
 	m_rotationAngle = 0.f;
+
+	m_reload = false;
+	ReloadShaders();
 
 	if(!this->CommonApp::HandleStart())
 		return false;
@@ -48,6 +54,7 @@ void Application::HandleStop()
 	delete m_pHeightMap;
 	Aeroplane::ReleaseResources();
 	delete m_pAeroplane;
+	delete m_pAnimation;
 
 	this->CommonApp::HandleStop();
 }
@@ -55,11 +62,20 @@ void Application::HandleStop()
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+void Application::ReloadShaders()
+{
+	if (m_pHeightMap->ReloadShader() == false)
+		this->SetWindowTitle("Reload Failed - see Visual Studio output window. Press F5 to try again.");
+	else
+		this->SetWindowTitle("Your Shader Here. Press F5 to reload shader file.");
+}
+
 void Application::HandleUpdate()
 {
-	m_rotationAngle += .01f;
+	if (m_cameraState == CAMERA_ROTATE)
+		m_rotationAngle += .01f;
 
-	if(m_cameraState == CAMERA_MAP)
+	if(m_cameraState == CAMERA_MAP || m_cameraState == CAMERA_ROTATE)
 	{
 		if(this->IsKeyPressed('Q'))
 			m_cameraZ -= 2.0f;
@@ -100,6 +116,17 @@ void Application::HandleUpdate()
 		dbW = false;
 	}
 
+	if (this->IsKeyPressed(VK_F5))
+	{
+		if (!m_reload)
+		{
+			ReloadShaders();
+			m_reload = true;
+		}
+	}
+	else
+		m_reload = false;
+
 	m_pAeroplane->Update(m_cameraState != CAMERA_MAP);
 	m_pAnimation->Update();
 }
@@ -115,6 +142,10 @@ void Application::HandleRender()
 	switch(m_cameraState)
 	{
 		case CAMERA_MAP:
+			vCamera = XMFLOAT3(sin(m_rotationAngle) * m_cameraZ, m_cameraZ / 4, cos(m_rotationAngle) * m_cameraZ);
+			vLookat = XMFLOAT3(0.0f, 4.0f, 0.0f);
+			break;
+		case CAMERA_ROTATE:
 			vCamera = XMFLOAT3(sin(m_rotationAngle) * m_cameraZ, m_cameraZ / 4, cos(m_rotationAngle) * m_cameraZ);
 			vLookat = XMFLOAT3(0.0f, 4.0f, 0.0f);
 			break;
@@ -136,12 +167,12 @@ void Application::HandleRender()
 	XMMATRIX matProj;
 	matProj = XMMatrixPerspectiveFovLH(float(XM_PI / 4), 2, 1.5f, 5000.0f);
 
-	this->SetViewMatrix(matView);
-	this->SetProjectionMatrix(matProj);
-
+	this->EnableDirectionalLight(1, XMFLOAT3(-1.f, -1.f, -1.f), XMFLOAT3(0.65f, 0.55f, 0.65f));
 	this->EnablePointLight(0, XMFLOAT3(100.0f, 100.f, -100.f), XMFLOAT3(1.f, 1.f, 1.f));
 	this->SetLightAttenuation(0, 200.f, 2.f, 2.f, 2.f);
-	this->EnableDirectionalLight(1, XMFLOAT3(-1.f, -1.f, -1.f), XMFLOAT3(0.65f, 0.55f, 0.65f));
+
+	this->SetViewMatrix(matView);
+	this->SetProjectionMatrix(matProj);
 
 	this->Clear(XMFLOAT4(.2f, .2f, .6f, 1.f));
 
@@ -149,9 +180,11 @@ void Application::HandleRender()
 	matWorld = XMMatrixIdentity();
 	this->SetWorldMatrix(matWorld);
 
-	m_pHeightMap->Draw();
+	m_pHeightMap->Draw(m_frameCount);
 	m_pAeroplane->Draw();
 	m_pAnimation->Draw();
+
+	m_frameCount++;
 }
 
 //////////////////////////////////////////////////////////////////////

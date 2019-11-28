@@ -102,6 +102,13 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="HeightMap.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\ExampleShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MAX_NUM_LIGHTS=4</PreprocessorDefinitions>
+    </FxCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -31,6 +31,8 @@ class Application : public CommonApp
 	void HandleRender();
 
   private:
+	float m_frameCount;
+	bool m_reload;
 	float m_rotationAngle;
 	float m_cameraZ;
 	bool m_bWireframe;
@@ -40,6 +42,8 @@ class Application : public CommonApp
 	Aeroplane* m_pAeroplane;
 	HeightMap* m_pHeightMap;
 	Animation* m_pAnimation;
+
+	void ReloadShaders();
 };
 
 #endif
