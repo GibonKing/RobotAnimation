@@ -37,8 +37,6 @@ private:
 	XMFLOAT4 worldPosition, rotation;
 	XMMATRIX worldMatrix;
 	int animationCount = 0, animation = 0;
-	float time = 0;
-	std::vector<XMFLOAT3> animEndPositions;
 	std::chrono::milliseconds timeElapsed, startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 
 	struct ModelPart{

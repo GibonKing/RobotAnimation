@@ -287,7 +287,6 @@ void Animation::CheckKeyframes() {
 
 	if (allModelFinish()) {
 		for (int i(0); i < ModelParts.size(); i++) {
-			time = 0;
 			startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 			ModelParts[i].tranFinish = false;
 			ModelParts[i].rotFinish = false;
@@ -313,15 +312,6 @@ void Animation::Update() {
 	}
 	if (Application::s_pApp->IsKeyPressed('3')) {
 		animation = 2;
-	}
-
-	if (Application::s_pApp->IsKeyPressed('L')) {
-		time += 0.001;
-		CheckKeyframes();
-	}
-	if (Application::s_pApp->IsKeyPressed('K')) {
-		time -= 0.001;
-		CheckKeyframes();
 	}
 
 	timeElapsed = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) - startTime) / 1000;
