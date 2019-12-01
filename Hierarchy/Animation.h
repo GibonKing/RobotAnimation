@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <cmath>
 
 __declspec(align(16)) class Animation
 {
@@ -28,11 +29,13 @@ public:
 	void UpdateMatrices();
 	void Draw();
 	void CheckKeyframes();
+	void Animate();
 
 	//Extra Functions
 	std::vector<float> GetRotationValues(std::string temp1);
 	std::vector<XMFLOAT4> GetTranslationValues(std::string temp1);
-	bool allModelFinish();
+	void SetTargets();
+	bool AllModelFinish();
 private:
 	XMFLOAT4 worldPosition, rotation;
 	XMMATRIX worldMatrix;
@@ -41,7 +44,7 @@ private:
 
 	struct ModelPart{
 		std::string name, parent = "";
-		int parentIterator, rotKeyframe = -1, tranKeyframe = -1;
+		int parentIterator, rotKeyframe = 0, tranKeyframe = 0;
 		XMFLOAT4 offset, rotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), targetOffset, targetRotation;
 		CommonMesh* modelMesh;
 		XMMATRIX modelMatrix;

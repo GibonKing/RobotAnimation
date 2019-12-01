@@ -181,7 +181,16 @@ void Animation::SetupAnimation(std::string filePath) {
 		}
 	}
 
+	SetTargets();
+
 	animationCount++;
+}
+
+void Animation::SetTargets() {
+	for (int i(0); i < ModelParts.size(); i++) {
+		ModelParts[i].targetRotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[0];
+		ModelParts[i].targetOffset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[0];
+	}
 }
 
 std::vector<float> Animation::GetRotationValues(std::string temp1) {
@@ -266,26 +275,26 @@ void Animation::CheckKeyframes() {
 
 		//Check Rotation
 		if (ModelParts[i].rotKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
-			ModelParts[i].rotKeyframe = -1;
+			ModelParts[i].rotKeyframe = 0;
 			ModelParts[i].rotFinish = true;
-		}
-		if (!ModelParts[i].rotFinish && ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe + 1] < timeElapsed.count()) {
-			ModelParts[i].rotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe + 1];
+		}	
+		if (!ModelParts[i].rotFinish && ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] < timeElapsed.count()) {
+			//ModelParts[i].rotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe + 1];
 			ModelParts[i].rotKeyframe++;
-		}			
+		}		
 
 		//Check Translation
 		if (ModelParts[i].tranKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
-			ModelParts[i].tranKeyframe = -1;
+			ModelParts[i].tranKeyframe = 0;
 			ModelParts[i].tranFinish = true;
 		}
-		if (!ModelParts[i].tranFinish && ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe + 1] < timeElapsed.count()) {
-			ModelParts[i].offset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe + 1];
+		if (!ModelParts[i].tranFinish && ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe] < timeElapsed.count()) {
+			//ModelParts[i].offset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe + 1];
 			ModelParts[i].tranKeyframe++;
 		}
 	}
 
-	if (allModelFinish()) {
+	if (AllModelFinish()) {
 		for (int i(0); i < ModelParts.size(); i++) {
 			startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 			ModelParts[i].tranFinish = false;
@@ -294,7 +303,7 @@ void Animation::CheckKeyframes() {
 	}
 }
 
-bool Animation::allModelFinish() {
+bool Animation::AllModelFinish() {
 	for (int i(0); i < ModelParts.size(); i++) {
 		if (!ModelParts[i].tranFinish || !ModelParts[i].rotFinish) {
 			return false;
@@ -303,19 +312,68 @@ bool Animation::allModelFinish() {
 	return true;
 }
 
+void Animation::Animate() {
+	XMFLOAT4 distance;
+	float localStartTime, localEndTime, framelength, frameDuration, framePercent;
+	for (int i(0); i < ModelParts.size(); i++) {
+		//Rotation
+		localStartTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe];
+		if (ModelParts[i].rotKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
+			localEndTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[0];
+		}else{
+			localEndTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe + 1];
+		}
+		framelength = localEndTime - localStartTime;
+		frameDuration = timeElapsed.count() - localStartTime;
+		framePercent = abs(frameDuration / framelength);
+
+		XMVECTOR currentRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].rotation.x, ModelParts[i].rotation.y, ModelParts[i].rotation.z)));
+		XMVECTOR targetRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].x, 
+																	ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].y, 
+																	ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].z)));
+		XMFLOAT3 rotFloat3;
+		XMStoreFloat3(&rotFloat3, XMVectorLerp(currentRotVector, targetRotVector, framePercent));
+		ModelParts[i].rotation = XMFLOAT4(rotFloat3.x, rotFloat3.y, rotFloat3.z, ModelParts[i].rotation.w);
+
+		//Translation
+		localStartTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe];
+		if (ModelParts[i].tranKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
+			localEndTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[0];
+		}
+		else {
+			localEndTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe + 1];
+		}
+		framelength = localEndTime - localStartTime;
+		frameDuration = timeElapsed.count() - localStartTime;
+		framePercent = frameDuration / framelength;
+
+		XMVECTOR currentTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].offset.x, ModelParts[i].offset.y, ModelParts[i].offset.z)));
+		XMVECTOR targetTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].x,
+																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].y,
+																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].z)));
+		XMFLOAT3 tranFloat3;
+		XMStoreFloat3(&tranFloat3, XMVectorLerp(currentTranVector, targetTranVector, framePercent));
+		ModelParts[i].offset = XMFLOAT4(tranFloat3.x, tranFloat3.y, tranFloat3.z, ModelParts[i].offset.w);
+	}
+}
+
 void Animation::Update() {
 	if (Application::s_pApp->IsKeyPressed('1')) {
 		animation = 0;
+		SetTargets();
 	}
 	if (Application::s_pApp->IsKeyPressed('2')) {
 		animation = 1;
+		SetTargets();
 	}
 	if (Application::s_pApp->IsKeyPressed('3')) {
 		animation = 2;
+		SetTargets();
 	}
 
-	timeElapsed = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) - startTime) / 1000;
+	timeElapsed = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) - startTime);
 	CheckKeyframes();
+	Animate();
 
 	UpdateMatrices();
 }
