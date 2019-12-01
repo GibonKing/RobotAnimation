@@ -76,7 +76,7 @@ void Animation::SetupAnimation(std::string filePath) {
 	int pos, pos2, modelPartsIterator = -1, modelAnimationsIterator = 0;
 	bool input;
 	std::vector<float> inputTranslations, inputRotations, inputRotX, inputRotY, inputRotZ, outputRotX, outputRotY, outputRotZ;
-	std::vector<XMFLOAT3> outputTranslations, outputRotations;
+	std::vector<XMFLOAT4> outputTranslations, outputRotations;
 
 	std::string text = "";
 
@@ -96,7 +96,7 @@ void Animation::SetupAnimation(std::string filePath) {
 						if (part != prevPart) {
 							if (modelPartsIterator != -1) {
 								for (int valueCount(0); valueCount < outputRotX.size(); valueCount++) {
-									outputRotations.push_back(XMFLOAT3(outputRotX[valueCount], outputRotY[valueCount], outputRotZ[valueCount]));
+									outputRotations.push_back(XMFLOAT4(outputRotX[valueCount], outputRotY[valueCount], outputRotZ[valueCount], 0.0f));
 								}
 							}
 							for (int models(0); models < ModelParts.size(); models++) {
@@ -104,7 +104,6 @@ void Animation::SetupAnimation(std::string filePath) {
 									if (modelPartsIterator != -1) {
 										ModelParts[modelPartsIterator].ModelAnimations.push_back({ inputTranslations, inputRotations, outputTranslations, outputRotations });
 										modelAnimationsIterator++;
-										outputTranslations.clear();
 										outputRotations.clear();
 									}
 									modelPartsIterator = models;
@@ -167,7 +166,7 @@ void Animation::SetupAnimation(std::string filePath) {
 	}
 
 	for (int valueCount(0); valueCount < outputRotX.size(); valueCount++) {
-		outputRotations.push_back(XMFLOAT3(outputRotX[valueCount], outputRotY[valueCount], outputRotZ[valueCount]));
+		outputRotations.push_back(XMFLOAT4(outputRotX[valueCount], outputRotY[valueCount], outputRotZ[valueCount], 0.0f));
 	}
 	for (int models(0); models < ModelParts.size(); models++) {
 		if (part == ModelParts[models].name) {
@@ -181,6 +180,8 @@ void Animation::SetupAnimation(std::string filePath) {
 			break;
 		}
 	}
+
+	animationCount++;
 }
 
 std::vector<float> Animation::GetRotationValues(std::string temp1) {
@@ -190,17 +191,17 @@ std::vector<float> Animation::GetRotationValues(std::string temp1) {
 
 	do {
 		ss >> value;
-		values.push_back(std::stof(value)/10);
+		values.push_back(std::stof(value));
 	} while (ss);
 	values.pop_back();
 
 	return values;
 }
 
-std::vector<XMFLOAT3> Animation::GetTranslationValues(std::string temp1) {
+std::vector<XMFLOAT4> Animation::GetTranslationValues(std::string temp1) {
 	std::string value;
-	XMFLOAT3 vectorValue;
-	std::vector<XMFLOAT3> vectorValues;
+	XMFLOAT4 vectorValue;
+	std::vector<XMFLOAT4> vectorValues;
 	int count(0);
 	std::istringstream ss(temp1);
 
@@ -216,6 +217,7 @@ std::vector<XMFLOAT3> Animation::GetTranslationValues(std::string temp1) {
 			break;
 		case 2:
 			vectorValue.z = std::stof(value)/10;
+			vectorValue.w = 0.0f;
 			vectorValues.push_back(vectorValue);
 			count = -1;
 			break;
@@ -259,43 +261,71 @@ void Animation::Draw(void) {
 	}
 }
 
-void Animation::Animate() {
+void Animation::CheckKeyframes() {
 	for (int i(0); i < ModelParts.size(); i++) {
-		if (ModelParts[i].rotKeyframe > 0 && ModelParts[i].rotKeyframe < ModelParts[i].ModelAnimations[animation].outputRotationValues.size()) {
-			ModelParts[i].rotation.x = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].x;
-			ModelParts[i].rotation.y = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].y;
-			ModelParts[i].rotation.z = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].z;
+
+		//Check Rotation
+		if (ModelParts[i].rotKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
+			ModelParts[i].rotKeyframe = -1;
+			ModelParts[i].rotFinish = true;
+		}
+		if (!ModelParts[i].rotFinish && ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe + 1] < timeElapsed.count()) {
+			ModelParts[i].rotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe + 1];
+			ModelParts[i].rotKeyframe++;
+		}			
+
+		//Check Translation
+		if (ModelParts[i].tranKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
+			ModelParts[i].tranKeyframe = -1;
+			ModelParts[i].tranFinish = true;
+		}
+		if (!ModelParts[i].tranFinish && ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe + 1] < timeElapsed.count()) {
+			ModelParts[i].offset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe + 1];
+			ModelParts[i].tranKeyframe++;
 		}
 	}
-	//keyframe++;
+
+	if (allModelFinish()) {
+		for (int i(0); i < ModelParts.size(); i++) {
+			time = 0;
+			startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+			ModelParts[i].tranFinish = false;
+			ModelParts[i].rotFinish = false;
+		}
+	}
 }
 
-void Animation::UpdateKeyframe() {
+bool Animation::allModelFinish() {
 	for (int i(0); i < ModelParts.size(); i++) {
-		//Rotation
-		if (ModelParts[i].rotKeyframe >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size())
-			ModelParts[i].rotKeyframe = 0;
-		if (ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] < time)
-			ModelParts[i].rotKeyframe++;
+		if (!ModelParts[i].tranFinish || !ModelParts[i].rotFinish) {
+			return false;
+		}
 	}
+	return true;
 }
 
 void Animation::Update() {
-	//Animations
 	if (Application::s_pApp->IsKeyPressed('1')) {
-		animation = 0;	//Idle Animation
+		animation = 0;
 	}
 	if (Application::s_pApp->IsKeyPressed('2')) {
-		animation = 1;	//Attack Animation
+		animation = 1;
 	}
 	if (Application::s_pApp->IsKeyPressed('3')) {
-		animation = 2;	//Death Animation
+		animation = 2;
 	}
 
-	time += 0.0001f;
+	if (Application::s_pApp->IsKeyPressed('L')) {
+		time += 0.001;
+		CheckKeyframes();
+	}
+	if (Application::s_pApp->IsKeyPressed('K')) {
+		time -= 0.001;
+		CheckKeyframes();
+	}
 
-	UpdateKeyframe();
-	Animate();
+	timeElapsed = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) - startTime) / 1000;
+	CheckKeyframes();
 
 	UpdateMatrices();
 }

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include <chrono>
 
 __declspec(align(16)) class Animation
 {
@@ -25,34 +26,32 @@ public:
 	//Update Functions
 	void Update();
 	void UpdateMatrices();
-	void UpdateKeyframe();
 	void Draw();
-	void Animate();
+	void CheckKeyframes();
 
 	//Extra Functions
 	std::vector<float> GetRotationValues(std::string temp1);
-	std::vector<XMFLOAT3> GetTranslationValues(std::string temp1);
+	std::vector<XMFLOAT4> GetTranslationValues(std::string temp1);
+	bool allModelFinish();
 private:
-	XMFLOAT4 worldPosition;
-	XMFLOAT4 rotation;
+	XMFLOAT4 worldPosition, rotation;
 	XMMATRIX worldMatrix;
-	int animation = 0;
+	int animationCount = 0, animation = 0;
 	float time = 0;
+	std::vector<XMFLOAT3> animEndPositions;
+	std::chrono::milliseconds timeElapsed, startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 
 	struct ModelPart{
-		std::string name;
-		std::string parent = "";
-		int parentIterator, rotKeyframe = 0, tranKeyframe = 0;
-		XMFLOAT4 offset;
-		XMFLOAT4 rotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+		std::string name, parent = "";
+		int parentIterator, rotKeyframe = -1, tranKeyframe = -1;
+		XMFLOAT4 offset, rotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), targetOffset, targetRotation;
 		CommonMesh* modelMesh;
 		XMMATRIX modelMatrix;
+		bool tranFinish, rotFinish;
 
 		struct ModelAnimation {
-			std::vector<float> inputTranslationValues;
-			std::vector<float> inputRotationValues;
-			std::vector<XMFLOAT3> outputTranslationValues;
-			std::vector<XMFLOAT3> outputRotationValues;
+			std::vector<float> inputTranslationValues, inputRotationValues;
+			std::vector<XMFLOAT4> outputTranslationValues, outputRotationValues;
 		};
 		std::vector<ModelAnimation> ModelAnimations;
 	};
