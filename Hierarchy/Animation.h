@@ -25,7 +25,7 @@ public:
 	void SetupAnimation(std::string filePath);
 
 	//Update Functions
-	void Update();
+	void Update(float deltaTime);
 	void UpdateMatrices();
 	void Draw();
 	void CheckKeyframes();
@@ -36,11 +36,12 @@ public:
 	std::vector<XMFLOAT4> GetTranslationValues(std::string temp1);
 	void SetTargets();
 	bool AllModelFinish();
+	void ChangeAnimation(int anim);
 private:
 	XMFLOAT4 worldPosition, rotation;
 	XMMATRIX worldMatrix;
 	int animationCount = 0, animation = 0;
-	std::chrono::milliseconds timeElapsed, startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+	float timeElapsed = 0;
 
 	struct ModelPart{
 		std::string name, parent = "";

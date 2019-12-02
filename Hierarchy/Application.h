@@ -11,6 +11,7 @@
 
 #include "CommonApp.h"
 #include "CommonMesh.h"
+#include "Timer.h"
 
 class Aeroplane;
 class HeightMap;
@@ -31,6 +32,7 @@ class Application : public CommonApp
 	void HandleRender();
 
   private:
+	Timer timer;
 	float m_frameCount;
 	bool m_reload;
 	float m_rotationAngle;

@@ -278,7 +278,7 @@ void Animation::CheckKeyframes() {
 			ModelParts[i].rotKeyframe = 0;
 			ModelParts[i].rotFinish = true;
 		}	
-		if (!ModelParts[i].rotFinish && ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] < timeElapsed.count()) {
+		if (!ModelParts[i].rotFinish && ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] < timeElapsed) {
 			//ModelParts[i].rotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe + 1];
 			ModelParts[i].rotKeyframe++;
 		}		
@@ -288,7 +288,7 @@ void Animation::CheckKeyframes() {
 			ModelParts[i].tranKeyframe = 0;
 			ModelParts[i].tranFinish = true;
 		}
-		if (!ModelParts[i].tranFinish && ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe] < timeElapsed.count()) {
+		if (!ModelParts[i].tranFinish && ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe] < timeElapsed) {
 			//ModelParts[i].offset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe + 1];
 			ModelParts[i].tranKeyframe++;
 		}
@@ -296,7 +296,7 @@ void Animation::CheckKeyframes() {
 
 	if (AllModelFinish()) {
 		for (int i(0); i < ModelParts.size(); i++) {
-			startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+			timeElapsed = 0;
 			ModelParts[i].tranFinish = false;
 			ModelParts[i].rotFinish = false;
 		}
@@ -317,15 +317,17 @@ void Animation::Animate() {
 	float localStartTime, localEndTime, framelength, frameDuration, framePercent;
 	for (int i(0); i < ModelParts.size(); i++) {
 		//Rotation
-		localStartTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe];
-		if (ModelParts[i].rotKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
-			localEndTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[0];
+		localEndTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe];
+		if (ModelParts[i].rotKeyframe - 1 < 0) {
+			localStartTime = 0;
 		}else{
-			localEndTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe + 1];
+			localStartTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe - 1];
 		}
 		framelength = localEndTime - localStartTime;
-		frameDuration = timeElapsed.count() - localStartTime;
-		framePercent = abs(frameDuration / framelength);
+		frameDuration = timeElapsed - localStartTime;
+		framePercent = frameDuration / framelength;
+		if (framePercent < 0)
+			framePercent = 0;
 
 		XMVECTOR currentRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].rotation.x, ModelParts[i].rotation.y, ModelParts[i].rotation.z)));
 		XMVECTOR targetRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].x, 
@@ -336,16 +338,18 @@ void Animation::Animate() {
 		ModelParts[i].rotation = XMFLOAT4(rotFloat3.x, rotFloat3.y, rotFloat3.z, ModelParts[i].rotation.w);
 
 		//Translation
-		localStartTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe];
-		if (ModelParts[i].tranKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
-			localEndTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[0];
+		localEndTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe];
+		if (ModelParts[i].tranKeyframe - 1 < 0) {
+			localStartTime = 0;
 		}
 		else {
-			localEndTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe + 1];
+			localStartTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe - 1];
 		}
 		framelength = localEndTime - localStartTime;
-		frameDuration = timeElapsed.count() - localStartTime;
+		frameDuration = timeElapsed - localStartTime;
 		framePercent = frameDuration / framelength;
+		if (framePercent < 0)
+			framePercent = 0;
 
 		XMVECTOR currentTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].offset.x, ModelParts[i].offset.y, ModelParts[i].offset.z)));
 		XMVECTOR targetTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].x,
@@ -357,21 +361,29 @@ void Animation::Animate() {
 	}
 }
 
-void Animation::Update() {
+void Animation::ChangeAnimation(int anim) {
+	animation = anim;
+	for (int i(0); i < ModelParts.size(); i++) {
+		ModelParts[i].targetRotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[0];
+		ModelParts[i].targetOffset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[0];
+		ModelParts[i].tranKeyframe = 0;
+		ModelParts[i].rotKeyframe = 0;
+	}
+}
+
+void Animation::Update(float deltaTime) {
 	if (Application::s_pApp->IsKeyPressed('1')) {
-		animation = 0;
-		SetTargets();
+		ChangeAnimation(0);
 	}
 	if (Application::s_pApp->IsKeyPressed('2')) {
-		animation = 1;
-		SetTargets();
+		ChangeAnimation(1);
 	}
 	if (Application::s_pApp->IsKeyPressed('3')) {
-		animation = 2;
-		SetTargets();
+		ChangeAnimation(2);
 	}
 
-	timeElapsed = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) - startTime);
+	timeElapsed += deltaTime;
+
 	CheckKeyframes();
 	Animate();
 

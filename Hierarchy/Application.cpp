@@ -72,6 +72,8 @@ void Application::ReloadShaders()
 
 void Application::HandleUpdate()
 {
+	timer.Update();
+
 	if (m_cameraState == CAMERA_ROTATE)
 		m_rotationAngle += .01f;
 
@@ -128,7 +130,7 @@ void Application::HandleUpdate()
 		m_reload = false;
 
 	m_pAeroplane->Update(m_cameraState != CAMERA_MAP);
-	m_pAnimation->Update();
+	m_pAnimation->Update(timer.GetDeltaTime());
 }
 
 //////////////////////////////////////////////////////////////////////
