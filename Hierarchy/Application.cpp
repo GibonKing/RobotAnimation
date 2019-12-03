@@ -73,6 +73,8 @@ void Application::ReloadShaders()
 void Application::HandleUpdate()
 {
 	timer.Update();
+	static float delay = 0.0f;
+	delay += timer.GetDeltaTime();
 
 	if (m_cameraState == CAMERA_ROTATE)
 		m_rotationAngle += .01f;
@@ -129,8 +131,34 @@ void Application::HandleUpdate()
 	else
 		m_reload = false;
 
+	static bool dbS = false;
+	if (this->IsKeyPressed('S')) {
+		if (!dbS)
+		{
+			slowMo = !slowMo;
+			dbS = true;
+		}
+	}
+	else
+	{
+		dbS = false;
+	}
+
+	if (IsKeyPressed('1')) {
+		m_pAnimation->ChangeAnimation(0);
+	}
+	if (IsKeyPressed('2')) {
+		m_pAnimation->ChangeAnimation(1);
+	}
+	if (IsKeyPressed('3')) {
+		m_pAnimation->ChangeAnimation(2);
+	}
+
 	m_pAeroplane->Update(m_cameraState != CAMERA_MAP);
-	m_pAnimation->Update(timer.GetDeltaTime());
+	if (!slowMo || delay > 1) {
+		m_pAnimation->Update(timer.GetDeltaTime());
+		delay = 0;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////

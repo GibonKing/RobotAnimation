@@ -22,7 +22,7 @@ class Timer {
 			return deltaTime;
 		}
 	private:
-		uint16_t GetCurrentTime() {
+		uint64_t GetCurrentTime() {
 			return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		}
 

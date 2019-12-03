@@ -33,6 +33,7 @@ class Application : public CommonApp
 
   private:
 	Timer timer;
+	bool slowMo = false;
 	float m_frameCount;
 	bool m_reload;
 	float m_rotationAngle;

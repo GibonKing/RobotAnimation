@@ -3,7 +3,7 @@
 Animation::Animation(float fX, float fY, float fZ, float fRotY) {
 	SetRotation(fRotY);
 	SetupModel();
-	SetupAnimations({ "Resources/Model/RobotIdleAnim.dae", "Resources/Model/RobotAttackAnim.dae", "Resources/Model/RobotDieAnimDAE.txt" });
+	SetupAnimations({ "Resources/Model/RobotIdleAnim.dae", "Resources/Model/RobotAttackAnim.dae", "Resources/Model/RobotDieAnim.dae" });
 	SetWorldPosition(fX, fY, fZ);
 }
 
@@ -274,23 +274,29 @@ void Animation::CheckKeyframes() {
 	for (int i(0); i < ModelParts.size(); i++) {
 
 		//Check Rotation
-		if (ModelParts[i].rotKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
+		if (ModelParts[i].rotKeyframe >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
 			ModelParts[i].rotKeyframe = 0;
 			ModelParts[i].rotFinish = true;
 		}	
-		if (!ModelParts[i].rotFinish && ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] < timeElapsed) {
-			//ModelParts[i].rotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe + 1];
+		if (ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe] <= timeElapsed) {
 			ModelParts[i].rotKeyframe++;
-		}		
+		}
+		if (ModelParts[i].rotKeyframe >= ModelParts[i].ModelAnimations[animation].inputRotationValues.size()) {
+			ModelParts[i].rotKeyframe = 0;
+			ModelParts[i].rotFinish = true;
+		}
 
 		//Check Translation
-		if (ModelParts[i].tranKeyframe + 1 >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
+		if (ModelParts[i].tranKeyframe >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
 			ModelParts[i].tranKeyframe = 0;
 			ModelParts[i].tranFinish = true;
 		}
-		if (!ModelParts[i].tranFinish && ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe] < timeElapsed) {
-			//ModelParts[i].offset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe + 1];
+		if (ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe] <= timeElapsed) {
 			ModelParts[i].tranKeyframe++;
+		}
+		if (ModelParts[i].tranKeyframe >= ModelParts[i].ModelAnimations[animation].inputTranslationValues.size()) {
+			ModelParts[i].tranKeyframe = 0;
+			ModelParts[i].tranFinish = true;
 		}
 	}
 
@@ -313,7 +319,7 @@ bool Animation::AllModelFinish() {
 }
 
 void Animation::Animate() {
-	XMFLOAT4 distance;
+	int prevKeyframe;
 	float localStartTime, localEndTime, framelength, frameDuration, framePercent;
 	for (int i(0); i < ModelParts.size(); i++) {
 		//Rotation
@@ -328,8 +334,19 @@ void Animation::Animate() {
 		framePercent = frameDuration / framelength;
 		if (framePercent < 0)
 			framePercent = 0;
+		else if (framePercent > 1)
+			framePercent = 1;
 
-		XMVECTOR currentRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].rotation.x, ModelParts[i].rotation.y, ModelParts[i].rotation.z)));
+		if (ModelParts[i].rotKeyframe == 0) {
+			prevKeyframe = ModelParts[i].ModelAnimations[animation].outputRotationValues.size() - 1;
+		}
+		else {
+			prevKeyframe = ModelParts[i].rotKeyframe - 1;
+		}
+
+		XMVECTOR currentRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputRotationValues[prevKeyframe].x,
+																	ModelParts[i].ModelAnimations[animation].outputRotationValues[prevKeyframe].y,
+																	ModelParts[i].ModelAnimations[animation].outputRotationValues[prevKeyframe].z)));
 		XMVECTOR targetRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].x, 
 																	ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].y, 
 																	ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].z)));
@@ -350,8 +367,19 @@ void Animation::Animate() {
 		framePercent = frameDuration / framelength;
 		if (framePercent < 0)
 			framePercent = 0;
+		else if (framePercent > 1)
+			framePercent = 1;
 
-		XMVECTOR currentTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].offset.x, ModelParts[i].offset.y, ModelParts[i].offset.z)));
+		if (ModelParts[i].tranKeyframe == 0) {
+			prevKeyframe = ModelParts[i].ModelAnimations[animation].outputTranslationValues.size() - 1;
+		}
+		else {
+			prevKeyframe = ModelParts[i].tranKeyframe - 1;
+		}
+
+		XMVECTOR currentTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputTranslationValues[prevKeyframe].x,
+																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[prevKeyframe].y,
+																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[prevKeyframe].z)));
 		XMVECTOR targetTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].x,
 																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].y,
 																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].z)));
@@ -372,16 +400,6 @@ void Animation::ChangeAnimation(int anim) {
 }
 
 void Animation::Update(float deltaTime) {
-	if (Application::s_pApp->IsKeyPressed('1')) {
-		ChangeAnimation(0);
-	}
-	if (Application::s_pApp->IsKeyPressed('2')) {
-		ChangeAnimation(1);
-	}
-	if (Application::s_pApp->IsKeyPressed('3')) {
-		ChangeAnimation(2);
-	}
-
 	timeElapsed += deltaTime;
 
 	CheckKeyframes();
