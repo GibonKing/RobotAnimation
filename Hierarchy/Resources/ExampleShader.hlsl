@@ -88,6 +88,7 @@ void PSMain(const PSInput input, out PSOutput output)
 	float3 colourAmount = float3(0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < g_numLights; i++) {
 		float3 intensity = dot(g_lightDirections[i].xyz, input.normal);
+		intensity = clamp(intensity, 0, 1); //Keeps Intensity between 0 and 1 to prevent lighting getting too bright
 		colourAmount += intensity * g_lightColours[i];
 	}
 
