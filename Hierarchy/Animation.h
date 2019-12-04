@@ -22,11 +22,13 @@ public:
 	void Draw();
 	//Extra
 	void ChangeAnimation(int anim);
+	void PauseAnimation();
 private:
 	XMFLOAT4 worldPosition, rotation;
 	XMMATRIX worldMatrix;
 	int animationCount = 0, animation = 0, prevAnimation = 0;
 	float timeElapsed = 0, blendTime = 0;
+	bool animate;
 
 	struct ModelPart{
 		std::string name, parent = "";
@@ -60,7 +62,6 @@ private:
 	//Extra Functions
 	std::vector<float> GetRotationValues(std::string temp1);
 	std::vector<XMFLOAT4> GetTranslationValues(std::string temp1);
-	void SetTargets();
 	bool AllModelFinish();
 	XMVECTOR AnimateRotations(int anim, ModelPart modelPart);
 	XMVECTOR AnimateTranslations(int anim, ModelPart modelPart);

@@ -39,7 +39,7 @@ __declspec(align(16)) class Aeroplane
 	XMFLOAT4 m_v4Pos; // World position
 
 	XMVECTOR m_vForwardVector; // Forward Vector for Plane
-	float m_fSpeed; // Forward speed
+	float m_fSpeed, oldSpeed; // Forward speed
 
 	XMMATRIX m_mWorldTrans; // World translation matrix
 	XMMATRIX m_mWorldMatrix; // World transformation matrix
@@ -63,6 +63,7 @@ __declspec(align(16)) class Aeroplane
 	XMMATRIX m_mCamWorldMatrix; // Camera's world transformation matrix
 
 	bool m_bGunCam;
+	bool move;
 
   public:
 	float GetXPosition(void) { return m_v4Pos.x; }

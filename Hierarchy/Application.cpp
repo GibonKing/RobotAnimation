@@ -96,7 +96,6 @@ void Application::HandleUpdate()
 		{
 			if(++m_cameraState == CAMERA_MAX)
 				m_cameraState = CAMERA_MAP;
-
 			dbC = true;
 		}
 	}
@@ -144,17 +143,70 @@ void Application::HandleUpdate()
 		dbS = false;
 	}
 
-	if (IsKeyPressed('1')) {
-		m_pAnimation->ChangeAnimation(0);
+	static bool dbCamera = false;
+	if (this->IsKeyPressed(VK_F1)) {
+		if (!dbCamera)
+		{
+			if(m_cameraState == CAMERA_MAP)
+				m_cameraState = CAMERA_ROTATE;
+			else
+				m_cameraState = CAMERA_MAP;
+			dbCamera = true;
+		}
 	}
-	if (IsKeyPressed('2')) {
-		m_pAnimation->ChangeAnimation(1);
+	else if (this->IsKeyPressed(VK_F2)) {
+		if (!dbCamera)
+		{
+			m_cameraState = CAMERA_PLANE;
+			dbCamera = true;
+		}
 	}
-	if (IsKeyPressed('3')) {
-		m_pAnimation->ChangeAnimation(2);
+	else if (this->IsKeyPressed(VK_F3)) {
+		//if (!dbCamera)
+		//{
+		//	m_cameraState = 
+		//	dbCamera = true;
+		//}
+	}
+	else if(this->IsKeyPressed(VK_F4)) {
+		//if (!dbCamera)
+		//{
+		//	m_cameraState =
+		//	dbCamera = true;
+		//}
+	}
+	else
+	{
+		dbCamera = false;
 	}
 
-	m_pAeroplane->Update(m_cameraState != CAMERA_MAP);
+	//Animation Controls
+	static bool dbAnimate = false;
+	if (this->IsKeyPressed('1')) { //Idle
+		if (!dbAnimate) {
+			m_pAnimation->ChangeAnimation(0);
+			dbAnimate = true;
+		}
+	}else if (this->IsKeyPressed('2')) { //Attack
+		if (!dbAnimate) {
+			m_pAnimation->ChangeAnimation(1);
+			dbAnimate = true;
+		}
+	}
+	else if (this->IsKeyPressed('3')) { //Death
+		if (!dbAnimate) {
+			m_pAnimation->ChangeAnimation(2);
+			dbAnimate = true;
+		}
+	}else if (this->IsKeyPressed('0')) { //Play/Pause
+		if (!dbAnimate) {
+			m_pAnimation->PauseAnimation();
+			dbAnimate = true;
+		}
+	}else
+		dbAnimate = false;
+
+	m_pAeroplane->Update(m_cameraState != CAMERA_MAP && m_cameraState != CAMERA_ROTATE);
 	if (!slowMo || delay > 1) {
 		m_pAnimation->Update(timer.GetDeltaTime());
 		delay = 0;

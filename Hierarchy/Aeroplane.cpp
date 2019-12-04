@@ -185,13 +185,43 @@ void Aeroplane::Update(bool bPlayerControl)
 			m_v4Rot.z += 1.f;
 		}
 
+		static bool dbM = false;
+		if (Application::s_pApp->IsKeyPressed('M')) {
+			if (!dbM) {
+				if (m_fSpeed != 0) {
+					oldSpeed = m_fSpeed;
+					m_fSpeed = 0;
+					move = false;
+				}
+				else {
+					m_fSpeed = oldSpeed;
+					move = true;
+				}
+				dbM = true;
+			}
+		}
+		else {
+			dbM = false;
+		}
+
+		static bool dbSpace = false;
+		if (Application::s_pApp->IsKeyPressed(' ')) {
+			if (!dbSpace) {
+				dbSpace = true;
+			}
+		}
+		else {
+			dbSpace = false;
+		}
 	} // End of if player control
 
-	// Apply a forward thrust and limit to a maximum speed of 1
-	m_fSpeed += 0.001f;
+	if (move) {
+		// Apply a forward thrust and limit to a maximum speed of 1
+		m_fSpeed += 0.001f;
 
-	if(m_fSpeed > 1)
-		m_fSpeed = 1;
+		if (m_fSpeed > 1)
+			m_fSpeed = 1;
+	}
 
 	// Rotate propeller and turret
 	m_v4PropRot.z += 100 * m_fSpeed;

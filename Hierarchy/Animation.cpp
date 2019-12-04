@@ -3,7 +3,7 @@
 Animation::Animation(float fX, float fY, float fZ, float fRotY) {
 	SetRotation(fRotY);
 	SetupModel();
-	SetupAnimations({ "Resources/Model/RobotIdleAnim.dae", "Resources/Model/RobotAttackAnim.dae", "Resources/Model/RobotDieAnim.dae" });
+	SetupAnimations({ "Resources/Anim/RobotIdleAnim.dae", "Resources/Anim/RobotAttackAnim.dae", "Resources/Anim/RobotDieAnim.dae" });
 	SetWorldPosition(fX, fY, fZ);
 }
 
@@ -419,13 +419,17 @@ void Animation::ChangeAnimation(int anim) {
 		blendTime = 0;
 	}
 }
+void Animation::PauseAnimation() {
+	animate = !animate;
+}
 
 void Animation::Update(float deltaTime) {
-	timeElapsed += deltaTime;
-	blendTime += deltaTime;
-
-	CheckKeyframes();
-	Animate();
-
-	UpdateMatrices();
+	if (animate) {
+		timeElapsed += deltaTime;
+		if (blendTime < 1.1)
+			blendTime += deltaTime;
+		CheckKeyframes();
+		Animate();
+		UpdateMatrices();
+	}
 }
