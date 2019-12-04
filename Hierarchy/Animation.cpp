@@ -181,16 +181,7 @@ void Animation::SetupAnimation(std::string filePath) {
 		}
 	}
 
-	SetTargets();
-
 	animationCount++;
-}
-
-void Animation::SetTargets() {
-	for (int i(0); i < ModelParts.size(); i++) {
-		ModelParts[i].targetRotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[0];
-		ModelParts[i].targetOffset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[0];
-	}
 }
 
 std::vector<float> Animation::GetRotationValues(std::string temp1) {
@@ -319,88 +310,119 @@ bool Animation::AllModelFinish() {
 }
 
 void Animation::Animate() {
-	int prevKeyframe;
-	float localStartTime, localEndTime, framelength, frameDuration, framePercent;
+	XMFLOAT4 rot, tran;
 	for (int i(0); i < ModelParts.size(); i++) {
-		//Rotation
-		localEndTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe];
-		if (ModelParts[i].rotKeyframe - 1 < 0) {
-			localStartTime = 0;
-		}else{
-			localStartTime = ModelParts[i].ModelAnimations[animation].inputRotationValues[ModelParts[i].rotKeyframe - 1];
-		}
-		framelength = localEndTime - localStartTime;
-		frameDuration = timeElapsed - localStartTime;
-		framePercent = frameDuration / framelength;
-		if (framePercent < 0)
-			framePercent = 0;
-		else if (framePercent > 1)
-			framePercent = 1;
+		ModelParts[i].anim1Rotation = AnimateRotations(animation, ModelParts[i]);
+		ModelParts[i].anim1Offset = AnimateTranslations(animation, ModelParts[i]);
+		if (blendTime < 1.0f) {
+			ModelParts[i].anim2Rotation = AnimateRotations(prevAnimation, ModelParts[i]);
+			ModelParts[i].anim2Offset = AnimateTranslations(prevAnimation, ModelParts[i]);
 
-		if (ModelParts[i].rotKeyframe == 0) {
-			prevKeyframe = ModelParts[i].ModelAnimations[animation].outputRotationValues.size() - 1;
+			XMStoreFloat4(&rot, XMVectorLerp(ModelParts[i].anim2Rotation, ModelParts[i].anim1Rotation, blendTime));
+			XMStoreFloat4(&tran, XMVectorLerp(ModelParts[i].anim2Offset, ModelParts[i].anim1Offset, blendTime));
 		}
 		else {
-			prevKeyframe = ModelParts[i].rotKeyframe - 1;
+			XMStoreFloat4(&rot, ModelParts[i].anim1Rotation);
+			XMStoreFloat4(&tran, ModelParts[i].anim1Offset);
 		}
-
-		XMVECTOR currentRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputRotationValues[prevKeyframe].x,
-																	ModelParts[i].ModelAnimations[animation].outputRotationValues[prevKeyframe].y,
-																	ModelParts[i].ModelAnimations[animation].outputRotationValues[prevKeyframe].z)));
-		XMVECTOR targetRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].x, 
-																	ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].y, 
-																	ModelParts[i].ModelAnimations[animation].outputRotationValues[ModelParts[i].rotKeyframe].z)));
-		XMFLOAT3 rotFloat3;
-		XMStoreFloat3(&rotFloat3, XMVectorLerp(currentRotVector, targetRotVector, framePercent));
-		ModelParts[i].rotation = XMFLOAT4(rotFloat3.x, rotFloat3.y, rotFloat3.z, ModelParts[i].rotation.w);
-
-		//Translation
-		localEndTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe];
-		if (ModelParts[i].tranKeyframe - 1 < 0) {
-			localStartTime = 0;
-		}
-		else {
-			localStartTime = ModelParts[i].ModelAnimations[animation].inputTranslationValues[ModelParts[i].tranKeyframe - 1];
-		}
-		framelength = localEndTime - localStartTime;
-		frameDuration = timeElapsed - localStartTime;
-		framePercent = frameDuration / framelength;
-		if (framePercent < 0)
-			framePercent = 0;
-		else if (framePercent > 1)
-			framePercent = 1;
-
-		if (ModelParts[i].tranKeyframe == 0) {
-			prevKeyframe = ModelParts[i].ModelAnimations[animation].outputTranslationValues.size() - 1;
-		}
-		else {
-			prevKeyframe = ModelParts[i].tranKeyframe - 1;
-		}
-
-		XMVECTOR currentTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputTranslationValues[prevKeyframe].x,
-																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[prevKeyframe].y,
-																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[prevKeyframe].z)));
-		XMVECTOR targetTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].x,
-																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].y,
-																	ModelParts[i].ModelAnimations[animation].outputTranslationValues[ModelParts[i].tranKeyframe].z)));
-		XMFLOAT3 tranFloat3;
-		XMStoreFloat3(&tranFloat3, XMVectorLerp(currentTranVector, targetTranVector, framePercent));
-		ModelParts[i].offset = XMFLOAT4(tranFloat3.x, tranFloat3.y, tranFloat3.z, ModelParts[i].offset.w);
+		ModelParts[i].rotation = rot;
+		ModelParts[i].offset = tran;
 	}
 }
 
+XMVECTOR Animation::AnimateRotations(int anim, ModelPart modelPart) {
+	int prevKeyframe, keyFrame;
+	float localStartTime, localEndTime, framelength, frameDuration, framePercent;
+	if (modelPart.rotKeyframe >= modelPart.ModelAnimations[anim].inputRotationValues.size()) {
+		keyFrame = 0;
+	}
+	else {
+		keyFrame = modelPart.rotKeyframe;
+	}
+
+	localEndTime = modelPart.ModelAnimations[anim].inputRotationValues[keyFrame];
+	if (keyFrame == 0) {
+		localStartTime = 0;
+	}
+	else {
+		localStartTime = modelPart.ModelAnimations[anim].inputRotationValues[keyFrame - 1];
+	}
+	framelength = localEndTime - localStartTime;
+	frameDuration = timeElapsed - localStartTime;
+	framePercent = frameDuration / framelength;
+	if (framePercent < 0)
+		framePercent = 0;
+	else if (framePercent > 1)
+		framePercent = 1;
+
+	if (keyFrame == 0) {
+		prevKeyframe = modelPart.ModelAnimations[anim].outputRotationValues.size() - 1;
+	}
+	else {
+		prevKeyframe = keyFrame - 1;
+	}
+
+	XMVECTOR currentRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(modelPart.ModelAnimations[anim].outputRotationValues[prevKeyframe].x,
+																modelPart.ModelAnimations[anim].outputRotationValues[prevKeyframe].y,
+																modelPart.ModelAnimations[anim].outputRotationValues[prevKeyframe].z)));
+	XMVECTOR targetRotVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(modelPart.ModelAnimations[anim].outputRotationValues[keyFrame].x,
+																modelPart.ModelAnimations[anim].outputRotationValues[keyFrame].y,
+																modelPart.ModelAnimations[anim].outputRotationValues[keyFrame].z)));
+	return XMVectorLerp(currentRotVector, targetRotVector, framePercent);
+}
+
+XMVECTOR Animation::AnimateTranslations(int anim, ModelPart modelPart) {
+	int prevKeyframe, keyFrame;
+	float localStartTime, localEndTime, framelength, frameDuration, framePercent;
+	if (modelPart.tranKeyframe >= modelPart.ModelAnimations[anim].inputTranslationValues.size()) {
+		keyFrame = 0;
+	}
+	else {
+		keyFrame = modelPart.tranKeyframe;
+	}
+
+	localEndTime = modelPart.ModelAnimations[anim].inputTranslationValues[keyFrame];
+	if (keyFrame == 0) {
+		localStartTime = 0;
+	}
+	else {
+		localStartTime = modelPart.ModelAnimations[anim].inputTranslationValues[keyFrame - 1];
+	}
+	framelength = localEndTime - localStartTime;
+	frameDuration = timeElapsed - localStartTime;
+	framePercent = frameDuration / framelength;
+	if (framePercent < 0)
+		framePercent = 0;
+	else if (framePercent > 1)
+		framePercent = 1;
+
+	if (keyFrame == 0) {
+		prevKeyframe = modelPart.ModelAnimations[anim].outputTranslationValues.size() - 1;
+	}
+	else {
+		prevKeyframe = modelPart.tranKeyframe - 1;
+	}
+
+	XMVECTOR currentTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(modelPart.ModelAnimations[anim].outputTranslationValues[prevKeyframe].x,
+																modelPart.ModelAnimations[anim].outputTranslationValues[prevKeyframe].y,
+																modelPart.ModelAnimations[anim].outputTranslationValues[prevKeyframe].z)));
+	XMVECTOR targetTranVector = XMVECTOR(XMLoadFloat3(&XMFLOAT3(modelPart.ModelAnimations[anim].outputTranslationValues[keyFrame].x,
+																modelPart.ModelAnimations[anim].outputTranslationValues[keyFrame].y,
+																modelPart.ModelAnimations[anim].outputTranslationValues[keyFrame].z)));
+	return XMVectorLerp(currentTranVector, targetTranVector, framePercent);
+}
+
 void Animation::ChangeAnimation(int anim) {
-	animation = anim;
-	for (int i(0); i < ModelParts.size(); i++) {
-		ModelParts[i].targetRotation = ModelParts[i].ModelAnimations[animation].outputRotationValues[0];
-		ModelParts[i].targetOffset = ModelParts[i].ModelAnimations[animation].outputTranslationValues[0];
-		ModelParts[i].tranKeyframe = 0;
-		ModelParts[i].rotKeyframe = 0;
+	if (animation != anim) {
+		prevAnimation = animation;
+		animation = anim;
+		blendTime = 0;
 	}
 }
 
 void Animation::Update(float deltaTime) {
 	timeElapsed += deltaTime;
+	blendTime += deltaTime;
 
 	CheckKeyframes();
 	Animate();
