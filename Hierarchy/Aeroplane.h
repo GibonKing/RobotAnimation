@@ -13,29 +13,40 @@
 #include "Application.h"
 #include "HeightMap.h"
 
+// Holds meshes needed for drawing the aeroplane so that there can be more than one set (used for shadows)
+class AeroplaneMeshes
+{
+public:
+	static AeroplaneMeshes *Load();
+
+	CommonMesh*	pPlaneMesh;
+	CommonMesh*	pPropMesh;
+	CommonMesh*	pTurretMesh;
+	CommonMesh*	pGunMesh;
+	CommonMesh* pSphereMesh;
+
+	~AeroplaneMeshes();
+protected:
+	AeroplaneMeshes();
+private:
+	// It's not safe to copy this kind of object.
+	AeroplaneMeshes(const AeroplaneMeshes &);
+	AeroplaneMeshes &operator=(const AeroplaneMeshes &);
+};
+
 __declspec(align(16)) class Aeroplane
 {
   public:
 	Aeroplane(float fX = 0.0f, float fY = 0.0f, float fZ = 0.0f, float fRotY = 0.0f);
 	~Aeroplane(void);
 
-	static void LoadResources(void); // Only load the resources once for all instances
-	static void ReleaseResources(void); // Only free the resources once for all instances
 	void Update(bool bPlayerControl); // Player only has control of plane when flag is set
-	void Draw(void);
+	void Draw(const AeroplaneMeshes *pMeshes);
 
 	void SetWorldPosition(float fX, float fY, float fZ);
 
   private:
 	void UpdateMatrices(void);
-
-	static CommonMesh* s_pPlaneMesh; // Only one plane mesh for all instances
-	static CommonMesh* s_pPropMesh; // Only one propellor mesh for all instances
-	static CommonMesh* s_pTurretMesh; // Only one turret mesh for all instances
-	static CommonMesh* s_pGunMesh; // Only one gun mesh for all instances
-	static CommonMesh* m_pSphereMesh; // Only one gun mesh for all instances
-
-	static bool s_bResourcesReady;
 
 	XMFLOAT4 m_v4Rot; // Euler rotation angles
 	XMFLOAT4 m_v4Pos; // World position
@@ -87,6 +98,7 @@ __declspec(align(16)) class Aeroplane
 	}
 	XMFLOAT4 GetPosition(void) { return m_v4Pos; }
 	void SetGunCamera(bool value) { m_bGunCam = value; }
+
 	void SetBomb(bool Bomb) { bomb = Bomb; }
 	bool GetBomb() { return bomb; }
 	XMFLOAT4 GetBombPosition() { return m_v4BombPos; }

@@ -9,14 +9,42 @@
 
 #include "Aeroplane.h"
 
-// Initialise static class variables.
-CommonMesh* Aeroplane::s_pPlaneMesh = NULL;
-CommonMesh* Aeroplane::s_pPropMesh = NULL;
-CommonMesh* Aeroplane::s_pTurretMesh = NULL;
-CommonMesh* Aeroplane::s_pGunMesh = NULL;
-CommonMesh* Aeroplane::m_pSphereMesh = NULL;
+AeroplaneMeshes *AeroplaneMeshes::Load()
+{
+	AeroplaneMeshes *pMeshes = new AeroplaneMeshes;
 
-bool Aeroplane::s_bResourcesReady = false;
+	pMeshes->pPlaneMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/plane.x");
+	pMeshes->pPropMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/prop.x");
+	pMeshes->pTurretMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/turret.x");
+	pMeshes->pGunMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/gun.x");
+	pMeshes->pSphereMesh = CommonMesh::NewSphereMesh(Application::s_pApp, 1.0f, 16, 16);
+
+	if (!pMeshes->pPlaneMesh || !pMeshes->pPropMesh || !pMeshes->pTurretMesh || !pMeshes->pGunMesh || !pMeshes->pGunMesh)
+	{
+		delete pMeshes;
+		return NULL;
+	}
+
+	return pMeshes;
+}
+
+AeroplaneMeshes::AeroplaneMeshes() :
+	pPlaneMesh(NULL),
+	pPropMesh(NULL),
+	pTurretMesh(NULL),
+	pGunMesh(NULL),
+	pSphereMesh(NULL)
+{
+}
+
+AeroplaneMeshes::~AeroplaneMeshes()
+{
+	delete this->pPlaneMesh;
+	delete this->pPropMesh;
+	delete this->pTurretMesh;
+	delete this->pGunMesh;
+	delete this->pSphereMesh;
+}
 
 Aeroplane::Aeroplane(float fX, float fY, float fZ, float fRotY)
 {
@@ -25,6 +53,7 @@ Aeroplane::Aeroplane(float fX, float fY, float fZ, float fRotY)
 	m_mTurretWorldMatrix = XMMatrixIdentity();
 	m_mGunWorldMatrix = XMMatrixIdentity();
 	m_mCamWorldMatrix = XMMatrixIdentity();
+	m_mBombWorldMatrix = XMMatrixIdentity();
 
 	m_v4Rot = XMFLOAT4(0.0f, fRotY, 0.0f, 0.0f);
 	m_v4Pos = XMFLOAT4(fX, fY, fZ, 0.0f);
@@ -147,12 +176,10 @@ void Aeroplane::UpdateMatrices(void)
 
 void Aeroplane::Update(bool bPlayerControl)
 {
-	// DON'T DO THIS UNTIL YOu HAVE COMPLETED THE FUNCTION ABOVE
 	if(bPlayerControl)
 	{
 		// Step 1: Make the plane pitch upwards when you press "Q" and return to level when released
 		// Maximum pitch = 60 degrees
-
 		if (Application::s_pApp->IsKeyPressed('Q') && m_v4Rot.x < 60) {
 			m_v4Rot.x += 1.f;
 		}
@@ -163,7 +190,6 @@ void Aeroplane::Update(bool bPlayerControl)
 		// Step 2: Make the plane pitch downwards when you press "A" and return to level when released
 		// You can also impose a take off speed of 0.5 if you like
 		// Minimum pitch = -60 degrees
-
 		if (Application::s_pApp->IsKeyPressed('A') && m_v4Rot.x > -60) {
 			m_v4Rot.x -= 1.f;
 		}
@@ -173,7 +199,6 @@ void Aeroplane::Update(bool bPlayerControl)
 
 		// Step 3: Make the plane yaw and roll left when you press "O" and return to level when released
 		// Maximum roll = 20 degrees
-
 		if (Application::s_pApp->IsKeyPressed('O')) {
 			if(m_v4Rot.z < 20)
 				m_v4Rot.z += 1.f;
@@ -185,7 +210,6 @@ void Aeroplane::Update(bool bPlayerControl)
 
 		// Step 4: Make the plane yaw and roll right when you press "P" and return to level when released
 		// Minimum roll = -20 degrees
-
 		if (Application::s_pApp->IsKeyPressed('P')) {
 			if (m_v4Rot.z > -20)
 				m_v4Rot.z -= 1.f;
@@ -194,7 +218,6 @@ void Aeroplane::Update(bool bPlayerControl)
 		else if (m_v4Rot.z < 0) {
 			m_v4Rot.z += 1.f;
 		}
-
 		static bool dbM = false;
 		if (Application::s_pApp->IsKeyPressed('M')) {
 			if (!dbM) {
@@ -213,13 +236,6 @@ void Aeroplane::Update(bool bPlayerControl)
 		else {
 			dbM = false;
 		}
-
-		if (Application::s_pApp->IsKeyPressed(VK_SPACE)) {
-			shoot = true;
-		}
-		else
-			shoot = false;
-
 	} // End of if player control
 
 	if (move) {
@@ -267,9 +283,6 @@ void Aeroplane::Update(bool bPlayerControl)
 			}
 			XMStoreFloat4(&m_v4BombPos, vSColPos);
 		}
-
-		//vBombPos += XMLoadFloat4(&bombVel) * m_fSpeed;
-		//XMStoreFloat4(&m_v4BombPos, vBombPos);
 	}
 
 	// Move Forward
@@ -278,40 +291,22 @@ void Aeroplane::Update(bool bPlayerControl)
 	XMStoreFloat4(&m_v4Pos, vCurrPos);
 }
 
-void Aeroplane::LoadResources(void)
-{
-	s_pPlaneMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/plane.x");
-	s_pPropMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/prop.x");
-	s_pTurretMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/turret.x");
-	s_pGunMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/gun.x");
-	m_pSphereMesh = CommonMesh::NewSphereMesh(Application::s_pApp, 1.0f, 16, 16);
-}
-
-void Aeroplane::ReleaseResources(void)
-{
-	delete s_pPlaneMesh;
-	delete s_pPropMesh;
-	delete s_pTurretMesh;
-	delete s_pGunMesh;
-	delete m_pSphereMesh;
-}
-
-void Aeroplane::Draw(void)
+void Aeroplane::Draw(const AeroplaneMeshes *pMeshes)
 {
 	Application::s_pApp->SetWorldMatrix(m_mWorldMatrix);
-	s_pPlaneMesh->Draw();
+	pMeshes->pPlaneMesh->Draw();
 
 	Application::s_pApp->SetWorldMatrix(m_mPropWorldMatrix);
-	s_pPropMesh->Draw();
+	pMeshes->pPropMesh->Draw();
 
 	Application::s_pApp->SetWorldMatrix(m_mTurretWorldMatrix);
-	s_pTurretMesh->Draw();
+	pMeshes->pTurretMesh->Draw();
 
 	Application::s_pApp->SetWorldMatrix(m_mGunWorldMatrix);
-	s_pGunMesh->Draw();
+	pMeshes->pGunMesh->Draw();
 
 	if (bomb) {
 		Application::s_pApp->SetWorldMatrix(m_mBombWorldMatrix);
-		m_pSphereMesh->Draw();
+		pMeshes->pSphereMesh->Draw();
 	}
 }

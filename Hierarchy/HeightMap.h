@@ -23,7 +23,7 @@ static const size_t NUM_TEXTURE_FILES = sizeof g_aTextureFileNames / sizeof g_aT
 class HeightMap
 {
   public:
-	HeightMap(char* filename, float gridSize);
+	HeightMap(char* filename, float gridSize, CommonApp::Shader *pShader);
 	~HeightMap();
 
 	void Draw(float frameCount);
@@ -43,11 +43,9 @@ class HeightMap
 	int m_HeightMapFaceCount;
 	int m_FacesPerRow;
 	XMFLOAT3* m_pHeightMap;
-	XMFLOAT3* m_pFaceNormals;
-	XMFLOAT3* m_pNormalMap;
 	Vertex_Pos3fColour4ubNormal3fTex2f* m_pMapVtxs;
-
 	Application::Shader m_shader;
+	CommonApp::Shader* m_pShader;
 
 	ID3D11Buffer* m_pMyAppCBuffer; // our custom buffer resource.
 	int m_psMyAppCBufferSlot; // custom buffer resource binding in PS, discovered by reflection.

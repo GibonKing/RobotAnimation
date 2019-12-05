@@ -3,8 +3,10 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-HeightMap::HeightMap(char* filename, float gridSize)
+HeightMap::HeightMap(char* filename, float gridSize, CommonApp::Shader *pShader)
 {
+	m_pShader = pShader;
+
 	for (size_t i = 0; i < NUM_TEXTURE_FILES; ++i)
 	{
 		m_pTextures[i] = NULL;
@@ -287,6 +289,10 @@ void HeightMap::Draw(float frameCount)
 		pContext->VSSetShaderResources(m_vsMaterialMap, 1, &m_pTextureViews[3]);
 
 	m_pSamplerState = Application::s_pApp->GetSamplerState(true, true, true);
+	
+	CommonApp::Shader *pShader = m_pShader;
+	if (!pShader)
+		pShader = Application::s_pApp->GetUntexturedLitShader();
 
 	Application::s_pApp->DrawWithShader(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, m_pHeightMapBuffer, sizeof(Vertex_Pos3fColour4ubNormal3fTex2f),
 										NULL, 0, m_HeightMapVtxCount, NULL, m_pSamplerState, &m_shader);
