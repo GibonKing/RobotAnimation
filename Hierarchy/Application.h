@@ -12,6 +12,7 @@
 #include "CommonApp.h"
 #include "CommonMesh.h"
 #include "Timer.h"
+#include "CommonFont.h"
 
 class Aeroplane;
 class HeightMap;
@@ -24,12 +25,14 @@ class Application : public CommonApp
 {
   public:
 	static Application* s_pApp;
-
+	HeightMap* GetHeightMapPointer() { return m_pHeightMap; }
+	void SetCamera(int state) { m_cameraState = state; }
   protected:
 	bool HandleStart();
 	void HandleStop();
 	void HandleUpdate();
 	void HandleRender();
+	void Render2D();
 
   private:
 	Timer timer;
@@ -45,6 +48,9 @@ class Application : public CommonApp
 	Aeroplane* m_pAeroplane;
 	HeightMap* m_pHeightMap;
 	Animation* m_pAnimation;
+
+	CommonFont* font;
+	CommonFont::Style style;
 
 	void ReloadShaders();
 };

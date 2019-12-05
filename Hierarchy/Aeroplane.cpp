@@ -14,6 +14,7 @@ CommonMesh* Aeroplane::s_pPlaneMesh = NULL;
 CommonMesh* Aeroplane::s_pPropMesh = NULL;
 CommonMesh* Aeroplane::s_pTurretMesh = NULL;
 CommonMesh* Aeroplane::s_pGunMesh = NULL;
+CommonMesh* Aeroplane::m_pSphereMesh = NULL;
 
 bool Aeroplane::s_bResourcesReady = false;
 
@@ -63,8 +64,6 @@ void Aeroplane::UpdateMatrices(void)
 	XMMATRIX mRotX, mRotY, mRotZ, mTrans;
 	XMMATRIX mPlaneCameraRot, mPlaneGunRot, mPlaneTurretRot, mForwardMatrix;
 
-	// [START HERE]
-
 	// Calculate m_mWorldMatrix for plane based on Euler rotation angles and position data.
 	// i.e. Use XMMatrixRotationX(), XMMatrixRotationY(), XMMatrixRotationZ() and XMMatrixTranslationFromVector to calculate mRotX, mRotY, mRotZ and mTrans from m_v4Rot
 	// Then concatenate the matrices to calculate m_mWorldMatrix
@@ -75,11 +74,11 @@ void Aeroplane::UpdateMatrices(void)
 	mTrans = XMMatrixTranslationFromVector(XMLoadFloat4(&m_v4Pos));
 	m_mWorldMatrix = mRotZ * mRotX * mRotY * mTrans;
 
-	// [Skip this step first time through] Also calculate mPlaneCameraRot which ignores rotations in Z and X for the camera to parent to
+	// Also calculate mPlaneCameraRot which ignores rotations in Z and X for the camera to parent to
 
 	mPlaneCameraRot = mRotY * mTrans;
 
-	// [Skip this step first time through] Get the forward vector out of the world matrix and put it in m_vForwardVector
+	// Get the forward vector out of the world matrix and put it in m_vForwardVector
 
 	m_vForwardVector = m_mWorldMatrix.r[2];
 
@@ -120,19 +119,30 @@ void Aeroplane::UpdateMatrices(void)
 	mTrans = XMMatrixTranslationFromVector(XMLoadFloat4(&m_v4CamOff));
 	m_mCamWorldMatrix = mRotZ * mRotX * mRotY * mTrans;
 
-	// [Skip this step first time through] Switch between parenting the camera to the plane (without X and Z rotations) and the gun based on m_bGunCam
+	//Bomb Matirx
+	if (bomb) {
+		mRotX = XMMatrixRotationX(XMConvertToRadians(m_v4BombRot.x));
+		mRotY = XMMatrixRotationY(XMConvertToRadians(m_v4BombRot.y));
+		mRotZ = XMMatrixRotationZ(XMConvertToRadians(m_v4BombRot.z));
+		mTrans = XMMatrixTranslationFromVector(XMLoadFloat4(&m_v4BombPos));
+		m_mBombWorldMatrix = mRotZ * mRotX * mRotY * mTrans;
+	}
+
+	// Switch between parenting the camera to the plane (without X and Z rotations) and the gun based on m_bGunCam
 
 	if (m_bGunCam) {
 		m_mCamWorldMatrix = m_mCamWorldMatrix * mPlaneGunRot;
 	}
-	else {
+	else if (bomb){
+		m_mCamWorldMatrix = m_mCamWorldMatrix * m_mBombWorldMatrix;
+	}
+	else{
 		m_mCamWorldMatrix = m_mCamWorldMatrix * mPlaneCameraRot;
 	}
 
 	// Get the camera's world position (m_vCamWorldPos) out of m_mCameraWorldMatrix
 
 	m_vCamWorldPos = m_mCamWorldMatrix.r[3];
-
 }
 
 void Aeroplane::Update(bool bPlayerControl)
@@ -204,15 +214,12 @@ void Aeroplane::Update(bool bPlayerControl)
 			dbM = false;
 		}
 
-		static bool dbSpace = false;
-		if (Application::s_pApp->IsKeyPressed(' ')) {
-			if (!dbSpace) {
-				dbSpace = true;
-			}
+		if (Application::s_pApp->IsKeyPressed(VK_SPACE)) {
+			shoot = true;
 		}
-		else {
-			dbSpace = false;
-		}
+		else
+			shoot = false;
+
 	} // End of if player control
 
 	if (move) {
@@ -232,6 +239,39 @@ void Aeroplane::Update(bool bPlayerControl)
 
 	UpdateMatrices();
 
+	// Move Bomb
+	if (bomb) {
+		XMVECTOR vSColPos, vSColNorm;
+		XMVECTOR vBombPos = XMLoadFloat4(&m_v4BombPos);
+		XMVECTOR vBombVel = XMLoadFloat4(&bombVel);
+		XMVECTOR vBombGrav = XMLoadFloat4(&Gravity);
+
+		vBombPos += vBombVel;  // Really important that we add LAST FRAME'S velocity as this was how fast the collision is expecting the ball to move
+		vBombVel += vBombGrav; // The new velocity gets passed through to the collision so it can base its predictions on our speed NEXT FRAME
+		
+		XMStoreFloat4(&bombVel, vBombVel);
+		XMStoreFloat4(&m_v4BombPos, vBombPos);
+
+		bombSpeed = XMVectorGetX(XMVector3Length(vBombVel));
+		bombCollided = Application::s_pApp->GetHeightMapPointer()->RayCollision(vBombPos, vBombVel, bombSpeed, vSColPos, vSColNorm);
+
+		if (bombCollided) {
+			if (bombBounceCount < 3) {
+				vBombVel = XMVector4Reflect(vBombVel, vSColNorm);
+				XMStoreFloat4(&bombVel, vBombVel);
+				bombBounceCount++;
+			}
+			else {
+				Application::s_pApp->SetCamera(2);
+				bomb = false;
+			}
+			XMStoreFloat4(&m_v4BombPos, vSColPos);
+		}
+
+		//vBombPos += XMLoadFloat4(&bombVel) * m_fSpeed;
+		//XMStoreFloat4(&m_v4BombPos, vBombPos);
+	}
+
 	// Move Forward
 	XMVECTOR vCurrPos = XMLoadFloat4(&m_v4Pos);
 	vCurrPos += m_vForwardVector * m_fSpeed;
@@ -244,6 +284,7 @@ void Aeroplane::LoadResources(void)
 	s_pPropMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/prop.x");
 	s_pTurretMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/turret.x");
 	s_pGunMesh = CommonMesh::LoadFromXFile(Application::s_pApp, "Resources/Plane/gun.x");
+	m_pSphereMesh = CommonMesh::NewSphereMesh(Application::s_pApp, 1.0f, 16, 16);
 }
 
 void Aeroplane::ReleaseResources(void)
@@ -252,6 +293,7 @@ void Aeroplane::ReleaseResources(void)
 	delete s_pPropMesh;
 	delete s_pTurretMesh;
 	delete s_pGunMesh;
+	delete m_pSphereMesh;
 }
 
 void Aeroplane::Draw(void)
@@ -267,4 +309,9 @@ void Aeroplane::Draw(void)
 
 	Application::s_pApp->SetWorldMatrix(m_mGunWorldMatrix);
 	s_pGunMesh->Draw();
+
+	if (bomb) {
+		Application::s_pApp->SetWorldMatrix(m_mBombWorldMatrix);
+		m_pSphereMesh->Draw();
+	}
 }

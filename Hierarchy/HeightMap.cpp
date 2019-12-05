@@ -226,49 +226,6 @@ HeightMap::HeightMap(char* filename, float gridSize)
 	ReloadShader(); // This compiles the shader
 }
 
-XMFLOAT3 HeightMap::GetAveragedVertexNormal(int index, int row)
-{
-	XMFLOAT3 ret;
-
-	assert(index >= 0 && index < m_HeightMapVtxCount);
-
-	int faceIndex = (index - row) * 2; // Map vertex to face
-
-	XMVECTOR vAverage = XMLoadFloat3(GetFaceNormalPtr(faceIndex, 0)) +
-						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -1)) +
-						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -2)) +
-						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -m_FacesPerRow - 1)) +
-						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -m_FacesPerRow)) +
-						XMLoadFloat3(GetFaceNormalPtr(faceIndex, -m_FacesPerRow + 1));
-
-	vAverage /= 6;
-
-	vAverage = XMVector3Normalize(vAverage);
-
-	XMStoreFloat3(&ret, vAverage);
-
-	return ret;
-}
-
-XMFLOAT3* HeightMap::GetFaceNormalPtr(int faceIndex, int offset)
-{
-	static XMFLOAT3 vUp(0.0f, 1.0f, 0.0f);
-
-	if (faceIndex >= m_HeightMapFaceCount) // Last row of vertices will map off the end of the face list
-		return &vUp;
-
-	assert(faceIndex >= 0 && faceIndex < m_HeightMapFaceCount);
-
-	int newIndex = faceIndex + offset;
-	int oldRow = faceIndex / m_FacesPerRow;
-	int newRow = newIndex / m_FacesPerRow;
-
-	if (newIndex < 0 || oldRow != newRow || newIndex > m_HeightMapFaceCount)
-		return &m_pFaceNormals[faceIndex];
-
-	return &m_pFaceNormals[newIndex];
-}
-
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
@@ -554,4 +511,123 @@ bool HeightMap::LoadHeightMap(char* filename, float gridSize)
 }
 
 //////////////////////////////////////////////////////////////////////
+////////////////////  COLLISION DETECTION  ///////////////////////////
 //////////////////////////////////////////////////////////////////////
+
+bool HeightMap::RayCollision(XMVECTOR& rayPos, XMVECTOR rayDir, float raySpeed, XMVECTOR& colPos, XMVECTOR& colNormN)
+{
+
+	XMVECTOR v0, v1, v2, v3;
+	int i0, i1, i2, i3;
+	float colDist = 0.0f;
+
+	// This is a brute force solution that checks against every triangle in the heightmap
+	for (int l = 0; l < m_HeightMapLength - 1; ++l)
+	{
+		for (int w = 0; w < m_HeightMapWidth - 1; ++w)
+		{
+			int mapIndex = (l*m_HeightMapWidth) + w;
+	
+			i0 = mapIndex;
+			i1 = mapIndex + m_HeightMapWidth;
+			i2 = mapIndex + 1;
+			i3 = mapIndex + m_HeightMapWidth + 1;
+	
+			v0 = XMLoadFloat3(&m_pHeightMap[i0]);
+			v1 = XMLoadFloat3(&m_pHeightMap[i1]);
+			v2 = XMLoadFloat3(&m_pHeightMap[i2]);
+			v3 = XMLoadFloat3(&m_pHeightMap[i3]);
+	
+			//012 213
+			if (RayTriangle(v0, v2, v1, rayPos, rayDir, colPos, colNormN, colDist))
+			{
+				// Needs to be >=0 
+				if (colDist <= raySpeed && colDist >= 0.0f)
+				{
+					return true;
+				}	
+			}
+			// 213
+			if (RayTriangle(v1, v2, v3, rayPos, rayDir, colPos, colNormN, colDist))
+			{
+				// Needs to be >=0 
+				if (colDist <= raySpeed && colDist >= 0.0f)
+				{	
+					return true;
+				}
+			}
+		}	
+	}	
+	return false;
+}
+
+bool HeightMap::RayTriangle(const XMVECTOR& vert0, const XMVECTOR& vert1, const XMVECTOR& vert2, const XMVECTOR& rayPos, const XMVECTOR& rayDir, XMVECTOR& colPos, XMVECTOR& colNormN, float& colDist)
+{
+	// Part 1: Calculate the collision point between the ray and the plane on which the triangle lies
+
+	// Step 1: Calculate |COLNORM| 
+	colNormN = XMVector3Normalize(XMVector3Cross((vert2 - vert1), (vert0 - vert1)));
+
+	// Step 2: Use |COLNORM| and any vertex on the triangle to calculate D
+	float D = -XMVectorGetX(XMVector3Dot(colNormN, vert0)); // D = -(|COLNORM| dot |ANYVERT|)
+
+	// Step 3: Calculate the demoninator of the COLDIST equation: (|COLNORM| dot |RAYDIR|) and "early out" (return false) if it is 0
+	float colDistDenom = XMVectorGetX(XMVector3Dot(colNormN, XMVector3Normalize(rayDir)));
+	if (colDistDenom == 0.0f)
+		return false;
+
+	// Step 4: Calculate the numerator of the COLDIST equation: -(D+(|COLNORM| dot RAYPOS))
+	float colDistNumerator = -(D + XMVectorGetX(XMVector3Dot(colNormN, rayPos)));
+
+	// Step 5: Calculate COLDIST and "early out" again if COLDIST is behind RAYDIR
+	colDist = (colDistNumerator / colDistDenom);
+	if (colDist < 0.0f)
+		return false;
+
+	// Step 6: Use COLDIST to calculate COLPOS
+	colPos = rayPos + colDist * XMVector3Normalize(rayDir); //COLPOS = RAYPOS + COLDIST * | RAYDIR |
+
+	// Part 2: Work out if the intersection point falls within the triangle
+
+	// Move the ray backwards by a tiny bit (one unit) in case the ray is already on the plane
+	XMVECTOR RAYPOS = XMVectorSubtract(rayPos, XMVector3Normalize(rayDir));
+
+	// Step 1: Test against plane 1 and return false if behind plane
+	if (!PointPlane(RAYPOS, vert0, vert1, colPos))
+		return false;
+
+	// Step 2: Test against plane 2 and return false if behind plane
+	if (!PointPlane(RAYPOS, vert1, vert2, colPos))
+		return false;
+
+	// Step 3: Test against plane 3 and return false if behind plane
+	if (!PointPlane(RAYPOS, vert2, vert0, colPos))
+		return false;
+
+	// Step 4: Return true! (on triangle)
+	return true;
+}
+
+bool HeightMap::PointPlane(const XMVECTOR& vert0, const XMVECTOR& vert1, const XMVECTOR& vert2, const XMVECTOR& pointPos)
+{
+	XMVECTOR sVec0, sVec1, sNormN;
+	float sD, sNumer;
+
+	// Step 1: Calculate PNORM
+	sVec0 = vert1 - vert0;
+	sVec1 = vert2 - vert0;
+	sNormN = XMVector3Normalize(XMVector3Cross(sVec1, sVec0));
+
+	// Step 2: Calculate D
+	sD = -XMVectorGetX(XMVector3Dot(sNormN, vert0)); //D = -(| PNORM | dot VERT0)
+
+	// Step 3: Calculate full equation
+	sNumer = XMVectorGetX(XMVector3Dot(sNormN, pointPos)) + sD; //(|PNORM| dot POINTPOS) - (|PNORM| dot VERT0)
+
+	// Step 4: Return false if < 0 (behind plane)
+	if (sNumer < 0.0f)
+		return false;
+
+	// Step 5: Return true! (in front of plane)
+	return true;
+}

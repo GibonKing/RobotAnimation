@@ -10,12 +10,16 @@ const int CAMERA_ROTATE = 1;
 const int CAMERA_PLANE = 2;
 const int CAMERA_GUN = 3;
 const int CAMERA_MAX = 4;
+const int CAMERA_BOMB = 5;
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 bool Application::HandleStart()
 {
+	font = NULL;
+	style =	CommonFont::Style(VertexColour(255, 255, 255, 255), XMFLOAT2(1.0, 1.0));
+
 	s_pApp = this;
 
 	m_frameCount = 0.0f;
@@ -39,6 +43,8 @@ bool Application::HandleStart()
 	if(!this->CommonApp::HandleStart())
 		return false;
 
+	font = CommonFont::CreateByName("Arial", 10, 0, this);
+	
 	this->SetRasterizerState(false, m_bWireframe);
 
 	m_cameraState = CAMERA_MAP;
@@ -130,19 +136,6 @@ void Application::HandleUpdate()
 	else
 		m_reload = false;
 
-	static bool dbS = false;
-	if (this->IsKeyPressed('S')) {
-		if (!dbS)
-		{
-			slowMo = !slowMo;
-			dbS = true;
-		}
-	}
-	else
-	{
-		dbS = false;
-	}
-
 	static bool dbCamera = false;
 	if (this->IsKeyPressed(VK_F1)) {
 		if (!dbCamera)
@@ -206,6 +199,33 @@ void Application::HandleUpdate()
 	}else
 		dbAnimate = false;
 
+	static bool dbS = false; //Slow Mo
+	if (this->IsKeyPressed('S')) {
+		if (!dbS)
+		{
+			slowMo = !slowMo;
+			dbS = true;
+		}
+	}
+	else
+	{
+		dbS = false;
+	}
+
+	//Plane Controls
+	static bool dbB = false;
+	if (Application::s_pApp->IsKeyPressed('B')) {
+		if (!dbB && !m_pAeroplane->GetBomb()) {
+			m_pAeroplane->SetBomb(true);
+			m_pAeroplane->MakeBomb();
+			m_cameraState = CAMERA_BOMB;
+			dbB = true;
+		}
+	}
+	else {
+		dbB = false;
+	}
+
 	m_pAeroplane->Update(m_cameraState != CAMERA_MAP && m_cameraState != CAMERA_ROTATE);
 	if (!slowMo || delay > 1) {
 		m_pAnimation->Update(timer.GetDeltaTime());
@@ -241,6 +261,11 @@ void Application::HandleRender()
 			vCamera = XMFLOAT3(m_pAeroplane->GetCameraPosition().x, m_pAeroplane->GetCameraPosition().y, m_pAeroplane->GetCameraPosition().z);
 			vLookat = XMFLOAT3(m_pAeroplane->GetFocusPosition().x, m_pAeroplane->GetFocusPosition().y, m_pAeroplane->GetFocusPosition().z);
 			break;
+		case CAMERA_BOMB:
+			m_pAeroplane->SetGunCamera(false);
+			vCamera = XMFLOAT3(m_pAeroplane->GetCameraPosition().x, m_pAeroplane->GetCameraPosition().y, m_pAeroplane->GetCameraPosition().z);
+			vLookat = XMFLOAT3(m_pAeroplane->GetBombPosition().x, m_pAeroplane->GetBombPosition().y, m_pAeroplane->GetBombPosition().z);
+			break;
 	}
 
 	XMMATRIX matView;
@@ -266,7 +291,24 @@ void Application::HandleRender()
 	m_pAeroplane->Draw();
 	m_pAnimation->Draw();
 
+	Render2D();
+
 	m_frameCount++;
+}
+
+void Application::Render2D() {
+	float windowWidth, windowHeight;
+	this->GetWindowSize(&windowWidth, &windowHeight);
+
+	XMMATRIX projMtx = XMMatrixOrthographicOffCenterLH(0.f, windowWidth, 0.f, windowHeight, 1.f, 250.f);
+	this->SetProjectionMatrix(projMtx);
+
+	XMMATRIX viewMtx = XMMatrixTranslation(0.f, 0.f, 2.f);
+	this->SetViewMatrix(viewMtx);
+
+	this->SetWorldMatrix(XMMatrixIdentity());
+
+	font->DrawString(XMFLOAT3(2.0f, windowHeight - 15.0f, 0.0f), &style, "Test");
 }
 
 //////////////////////////////////////////////////////////////////////

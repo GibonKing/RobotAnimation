@@ -11,6 +11,7 @@
 //*********************************************************************************************
 
 #include "Application.h"
+#include "HeightMap.h"
 
 __declspec(align(16)) class Aeroplane
 {
@@ -32,6 +33,7 @@ __declspec(align(16)) class Aeroplane
 	static CommonMesh* s_pPropMesh; // Only one propellor mesh for all instances
 	static CommonMesh* s_pTurretMesh; // Only one turret mesh for all instances
 	static CommonMesh* s_pGunMesh; // Only one gun mesh for all instances
+	static CommonMesh* m_pSphereMesh; // Only one gun mesh for all instances
 
 	static bool s_bResourcesReady;
 
@@ -61,9 +63,16 @@ __declspec(align(16)) class Aeroplane
 
 	XMVECTOR m_vCamWorldPos; // World position
 	XMMATRIX m_mCamWorldMatrix; // Camera's world transformation matrix
+	
+	XMFLOAT4 m_v4BombRot; // Local rotation angles
+	XMFLOAT4 m_v4BombPos; // Local position
+	XMMATRIX m_mBombWorldMatrix; // Bomb's world transformation matrix
+	XMFLOAT4 bombVel, Gravity;
+	bool bombCollided;
+	float bombSpeed;
+	int bombBounceCount;
 
-	bool m_bGunCam;
-	bool move;
+	bool m_bGunCam, move, shoot, bomb = false;
 
   public:
 	float GetXPosition(void) { return m_v4Pos.x; }
@@ -78,6 +87,17 @@ __declspec(align(16)) class Aeroplane
 	}
 	XMFLOAT4 GetPosition(void) { return m_v4Pos; }
 	void SetGunCamera(bool value) { m_bGunCam = value; }
+	void SetBomb(bool Bomb) { bomb = Bomb; }
+	bool GetBomb() { return bomb; }
+	XMFLOAT4 GetBombPosition() { return m_v4BombPos; }
+	void MakeBomb() {
+		m_v4BombPos = m_v4Pos;
+		m_v4BombRot = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+		Gravity = XMFLOAT4(0.0f, -0.05f, 0.0f, 0.0f);
+		bombVel = XMFLOAT4(XMVectorGetX(m_vForwardVector), -0.2f, XMVectorGetZ(m_vForwardVector), XMVectorGetW(m_vForwardVector));
+		bombCollided = false;
+		bombBounceCount = 0;
+	}
 
 	void* operator new(size_t i)
 	{
